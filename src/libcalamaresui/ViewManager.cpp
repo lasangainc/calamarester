@@ -38,6 +38,10 @@
 #include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QQuickItem>
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+#include <QQuickWidget>
+#endif
 
 #define UPDATE_BUTTON_PROPERTY( name, value ) \
     do \
@@ -54,8 +58,85 @@ namespace
 constexpr int pageTransitionDurationMs = 250;
 constexpr qreal pageTransitionScale = 0.94;
 
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+QQuickItem*
+pageQuickRoot( QWidget* page )
+{
+    if ( !page )
+    {
+        return nullptr;
+    }
+    for ( QQuickWidget* quickWidget : page->findChildren< QQuickWidget* >() )
+    {
+        if ( QQuickItem* root = quickWidget->rootObject() )
+        {
+            return root;
+        }
+    }
+    return nullptr;
+}
+#endif
+
+struct PageTransitionTarget
+{
+    QObject* object = nullptr;
+    QQuickItem* quickItem = nullptr;
+    PageTransitionEffect* effect = nullptr;
+};
+
+PageTransitionTarget
+transitionTargetForPage( QWidget* page )
+{
+    PageTransitionTarget target;
+    if ( !page )
+    {
+        return target;
+    }
+
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+    target.quickItem = pageQuickRoot( page );
+#endif
+    if ( target.quickItem )
+    {
+        target.quickItem->setTransformOrigin( QQuickItem::Center );
+        target.object = target.quickItem;
+        return target;
+    }
+
+    target.effect = new PageTransitionEffect( page );
+    page->setGraphicsEffect( target.effect );
+    target.object = target.effect;
+    return target;
+}
+
+void
+clearTransitionTarget( QWidget* page, PageTransitionTarget& target )
+{
+    if ( target.effect && page )
+    {
+        page->setGraphicsEffect( nullptr );
+        target.effect = nullptr;
+    }
+}
+
+void
+setTransitionValues( const PageTransitionTarget& target, qreal opacity, qreal scale )
+{
+    if ( target.quickItem )
+    {
+        target.quickItem->setOpacity( opacity );
+        target.quickItem->setScale( scale );
+        return;
+    }
+    if ( target.effect )
+    {
+        target.effect->setOpacity( opacity );
+        target.effect->setScale( scale );
+    }
+}
+
 QParallelAnimationGroup*
-createPageTransitionAnimation( PageTransitionEffect* effect,
+createOpacityScaleAnimation( QObject* target,
                              qreal fromOpacity,
                              qreal toOpacity,
                              qreal fromScale,
@@ -64,13 +145,13 @@ createPageTransitionAnimation( PageTransitionEffect* effect,
 {
     auto* group = new QParallelAnimationGroup( parent );
 
-    auto* opacityAnimation = new QPropertyAnimation( effect, "opacity", group );
+    auto* opacityAnimation = new QPropertyAnimation( target, "opacity", group );
     opacityAnimation->setDuration( pageTransitionDurationMs );
     opacityAnimation->setStartValue( fromOpacity );
     opacityAnimation->setEndValue( toOpacity );
     opacityAnimation->setEasingCurve( QEasingCurve::OutCubic );
 
-    auto* scaleAnimation = new QPropertyAnimation( effect, "scale", group );
+    auto* scaleAnimation = new QPropertyAnimation( target, "scale", group );
     scaleAnimation->setDuration( pageTransitionDurationMs );
     scaleAnimation->setStartValue( fromScale );
     scaleAnimation->setEndValue( toScale );
@@ -273,59 +354,78 @@ ViewManager::animatePageEnter( QWidget* page )
         return;
     }
 
-    auto* effect = new PageTransitionEffect( page );
-    page->setGraphicsEffect( effect );
-    effect->setOpacity( 0.0 );
-    effect->setScale( pageTransitionScale );
+    PageTransitionTarget target = transitionTargetForPage( page );
+    if ( !target.object )
+    {
+        return;
+    }
 
-    auto* animation = createPageTransitionAnimation(
-        effect, 0.0, 1.0, pageTransitionScale, 1.0, this );
-    connect( animation, &QParallelAnimationGroup::finished, this, [ page ]() { page->setGraphicsEffect( nullptr ); } );
+    setTransitionValues( target, 0.0, pageTransitionScale );
+
+    auto* animation = createOpacityScaleAnimation(
+        target.object, 0.0, 1.0, pageTransitionScale, 1.0, this );
+    connect( animation,
+             &QParallelAnimationGroup::finished,
+             this,
+             [ page, target ]() mutable { clearTransitionTarget( page, target ); } );
     animation->start( QAbstractAnimation::DeleteWhenStopped );
 }
 
 void
 ViewManager::animateStepChange( int fromIndex, int toIndex, const std::function< void() >& stepChange )
 {
-    QWidget* outgoing = m_stack->widget( fromIndex );
-    QWidget* incoming = m_stack->widget( toIndex );
-    if ( !outgoing || !incoming || outgoing == incoming )
+    QWidget* outgoingPage = m_stack->widget( fromIndex );
+    QWidget* incomingPage = m_stack->widget( toIndex );
+    if ( !outgoingPage || !incomingPage || outgoingPage == incomingPage )
+    {
+        stepChange();
+        return;
+    }
+
+    PageTransitionTarget outgoing = transitionTargetForPage( outgoingPage );
+    if ( !outgoing.object )
     {
         stepChange();
         return;
     }
 
     m_transitioning = true;
+    setTransitionValues( outgoing, 1.0, 1.0 );
 
-    auto* outEffect = new PageTransitionEffect( outgoing );
-    outgoing->setGraphicsEffect( outEffect );
-    outEffect->setOpacity( 1.0 );
-    outEffect->setScale( 1.0 );
-
-    auto* outAnimation = createPageTransitionAnimation(
-        outEffect, 1.0, 0.0, 1.0, pageTransitionScale, this );
+    auto* outAnimation = createOpacityScaleAnimation(
+        outgoing.object, 1.0, 0.0, 1.0, pageTransitionScale, this );
     connect( outAnimation,
              &QParallelAnimationGroup::finished,
              this,
-             [ this, outgoing, incoming, stepChange ]()
+             [ this, outgoingPage, incomingPage, outgoing, stepChange ]() mutable
              {
-                 outgoing->setGraphicsEffect( nullptr );
+                 clearTransitionTarget( outgoingPage, outgoing );
 
                  stepChange();
 
-                 auto* inEffect = new PageTransitionEffect( incoming );
-                 incoming->setGraphicsEffect( inEffect );
-                 inEffect->setOpacity( 0.0 );
-                 inEffect->setScale( pageTransitionScale );
+                 PageTransitionTarget incoming = transitionTargetForPage( incomingPage );
+                 if ( !incoming.object )
+                 {
+                     m_transitioning = false;
+                     updateButtonLabels();
+                     return;
+                 }
 
-                 auto* inAnimation = createPageTransitionAnimation(
-                     inEffect, 0.0, 1.0, pageTransitionScale, 1.0, this );
+                 setTransitionValues( incoming, 0.0, pageTransitionScale );
+
+                 auto* inAnimation = createOpacityScaleAnimation(
+                     incoming.object, 0.0, 1.0, pageTransitionScale, 1.0, this );
                  connect( inAnimation,
                           &QParallelAnimationGroup::finished,
                           this,
-                          [ this, incoming ]()
+                          [ this, incomingPage, incoming ]() mutable
                           {
-                              incoming->setGraphicsEffect( nullptr );
+                              clearTransitionTarget( incomingPage, incoming );
+                              if ( incoming.quickItem )
+                              {
+                                  incoming.quickItem->setOpacity( 1.0 );
+                                  incoming.quickItem->setScale( 1.0 );
+                              }
                               m_transitioning = false;
                               updateButtonLabels();
                           } );
