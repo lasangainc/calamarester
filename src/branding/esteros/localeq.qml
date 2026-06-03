@@ -35,29 +35,33 @@ Item {
                 spacing: 10
                 model: config.supportedLocales
 
-                delegate: Button {
+                delegate: Item {
                     width: localeList.width
-                    implicitHeight: 44
-                    text: modelData
-                    flat: true
-                    checkable: true
-                    checked: config.currentLanguageCode === modelData
+                    height: 44
 
-                    onClicked: config.currentLanguageCode = modelData
+                    Button {
+                        anchors.fill: parent
+                        text: modelData
+                        flat: true
+                        checkable: true
+                        checked: config.currentLanguageCode === modelData
 
-                    contentItem: Text {
-                        text: parent.text
-                        color: "#1F1F1F"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        font.pixelSize: 13
-                    }
+                        onClicked: config.currentLanguageCode = modelData
 
-                    background: Rectangle {
-                        radius: height / 2
-                        color: parent.checked ? "#FFFFFF" : (parent.hovered ? "#F5F5F5" : "#FFFFFF")
-                        border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
-                        border.width: parent.checked ? 2 : 1
+                        contentItem: Text {
+                            text: parent.text
+                            color: "#1F1F1F"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.pixelSize: 13
+                        }
+
+                        background: Rectangle {
+                            radius: height / 2
+                            color: parent.checked ? "#FFFFFF" : (parent.hovered ? "#F5F5F5" : "#FFFFFF")
+                            border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
+                            border.width: parent.checked ? 2 : 1
+                        }
                     }
                 }
             }

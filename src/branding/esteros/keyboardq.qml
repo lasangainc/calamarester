@@ -33,29 +33,33 @@ Item {
                 spacing: 10
                 model: config.keyboardLayoutsModel
 
-                delegate: Button {
+                delegate: Item {
                     width: layoutList.width
-                    implicitHeight: 44
-                    text: model.label
-                    flat: true
-                    checkable: true
-                    checked: config.keyboardLayoutsModel.currentIndex === index
+                    height: 44
 
-                    onClicked: config.keyboardLayoutsModel.currentIndex = index
+                    Button {
+                        anchors.fill: parent
+                        text: model.label
+                        flat: true
+                        checkable: true
+                        checked: config.keyboardLayoutsModel.currentIndex === index
 
-                    contentItem: Text {
-                        text: parent.text
-                        color: "#1F1F1F"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        font.pixelSize: 13
-                    }
+                        onClicked: config.keyboardLayoutsModel.currentIndex = index
 
-                    background: Rectangle {
-                        radius: height / 2
-                        color: "#FFFFFF"
-                        border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
-                        border.width: parent.checked ? 2 : 1
+                        contentItem: Text {
+                            text: parent.text
+                            color: "#1F1F1F"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.pixelSize: 13
+                        }
+
+                        background: Rectangle {
+                            radius: height / 2
+                            color: "#FFFFFF"
+                            border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
+                            border.width: parent.checked ? 2 : 1
+                        }
                     }
                 }
             }
