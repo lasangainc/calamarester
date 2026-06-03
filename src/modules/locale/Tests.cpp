@@ -60,6 +60,7 @@ private Q_SLOTS:
     void testLanguageMappingFreeBSD_data();
     void testLanguageMappingFreeBSD();
     void testLanguageSimilarity();
+    void testHumanReadableLocaleNames();
 
 private:
     QStringList m_KDEneonLocales;
@@ -536,6 +537,18 @@ LocaleTests::testLocaleNameParts()
         QVERIFY( parts.isValid() );
         QCOMPARE( parts.name(), s );
     }
+}
+
+void
+LocaleTests::testHumanReadableLocaleNames()
+{
+    const QString english = humanReadableLocaleName( QStringLiteral( "en_US.UTF-8" ) );
+    QVERIFY( english.contains( QStringLiteral( "English" ) ) );
+    QVERIFY( !english.contains( QStringLiteral( "en_US" ) ) );
+
+    const QString spanish = humanReadableLocaleName( QStringLiteral( "es_ES.UTF-8" ) );
+    QVERIFY( spanish.contains( QStringLiteral( "Spanish" ) ) || spanish.contains( QStringLiteral( "Español" ) ) );
+    QVERIFY( !spanish.contains( QStringLiteral( "es_ES" ) ) );
 }
 
 void

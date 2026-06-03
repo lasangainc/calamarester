@@ -131,6 +131,9 @@ public Q_SLOTS:
     QString currentTimezoneName() const;  // human-readable
     QString currentTimezoneCode() const;
 
+    /** @brief Human-readable name for a locale identifier (e.g. en_US.UTF-8). */
+    Q_INVOKABLE QString localeDisplayName( const QString& localeCode ) const;
+
 signals:
     void currentLocationChanged( const Calamares::Locale::TimeZoneData* location ) const;
     void currentLocationStatusChanged( const QString& ) const;

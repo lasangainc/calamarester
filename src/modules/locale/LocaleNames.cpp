@@ -9,6 +9,8 @@
 
 #include "LocaleNames.h"
 
+#include "locale/Translation.h"
+
 #include "utils/Logger.h"
 
 #include <QRegularExpression>
@@ -87,4 +89,18 @@ LocaleNameParts::similarity( const LocaleNameParts& other ) const
     const auto matched_country = ( country == other.country ? ( country.isEmpty() ? 10 : 20 ) : 0 );
     const auto no_other_country_given = ( ( country != other.country && other.country.isEmpty() ) ? 10 : 0 );
     return 50 + matched_region + matched_country + no_other_country_given;
+}
+
+QString
+humanReadableLocaleName( const QString& localeCode, bool alwaysWithCountry )
+{
+    using Calamares::Locale::Translation;
+
+    const auto parts = LocaleNameParts::fromName( localeCode );
+    const QString localeId
+        = parts.isValid() ? parts.name() : localeCode.section( QLatin1Char( '.' ), 0, 0 );
+    const auto format = alwaysWithCountry ? Translation::LabelFormat::AlwaysWithCountry
+                                          : Translation::LabelFormat::IfNeededWithCountry;
+    Translation lang( { localeId }, format );
+    return lang.label();
 }

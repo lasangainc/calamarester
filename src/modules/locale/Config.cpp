@@ -14,8 +14,9 @@
 #include "GlobalStorage.h"
 #include "JobQueue.h"
 #include "Settings.h"
+#include "LocaleNames.h"
+
 #include "locale/Global.h"
-#include "locale/Translation.h"
 #include "modulesystem/ModuleManager.h"
 #include "network/Manager.h"
 #include "utils/Logger.h"
@@ -403,27 +404,24 @@ Config::currentTimezoneName() const
     return QString();
 }
 
-static inline QString
-localeLabel( const QString& s )
+QString
+Config::localeDisplayName( const QString& localeCode ) const
 {
-    using Calamares::Locale::Translation;
-
-    Translation lang( { s }, Translation::LabelFormat::AlwaysWithCountry );
-    return lang.label();
+    return humanReadableLocaleName( localeCode );
 }
 
 QString
 Config::currentLanguageStatus() const
 {
     return tr( "The system language will be set to %1.", "@info" )
-        .arg( localeLabel( m_selectedLocaleConfiguration.language() ) );
+        .arg( humanReadableLocaleName( m_selectedLocaleConfiguration.language(), true ) );
 }
 
 QString
 Config::currentLCStatus() const
 {
     return tr( "The numbers and dates locale will be set to %1.", "@info" )
-        .arg( localeLabel( m_selectedLocaleConfiguration.lc_numeric ) );
+        .arg( humanReadableLocaleName( m_selectedLocaleConfiguration.lc_numeric, true ) );
 }
 
 QString
