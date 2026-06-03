@@ -15,8 +15,9 @@ Rectangle {
     height: 72
     radius: 32
 
-    readonly property color accentColor: "#7B9FD4"
-    readonly property bool isWelcomeStep: ViewManager.currentStepIndex === 0
+    readonly property color accentColor: "#2563EB"
+    readonly property color accentPressedColor: "#1D4ED8"
+    readonly property color accentDisabledColor: "#B0B0B0"
 
     RowLayout {
         id: buttonBar
@@ -26,30 +27,53 @@ Rectangle {
         anchors.bottomMargin: 20
         spacing: 12
 
-        Item {
-            Layout.fillWidth: true
-            visible: !navigationBar.isWelcomeStep
-        }
-
         Button {
-            id: backButton
-            visible: ViewManager.backAndNextVisible && !navigationBar.isWelcomeStep
-            enabled: ViewManager.backEnabled
-            implicitWidth: 44
-            implicitHeight: 44
+            id: quitButton
+            visible: ViewManager.quitVisible
+            enabled: ViewManager.quitEnabled
             flat: true
-            display: AbstractButton.IconOnly
-            icon.name: ViewManager.backIcon
-            onClicked: ViewManager.back()
+            text: ViewManager.quitLabel
+            onClicked: ViewManager.quit()
+
+            ToolTip.visible: hovered
+            ToolTip.timeout: 5000
+            ToolTip.delay: 1000
+            ToolTip.text: ViewManager.quitTooltip
 
             background: Rectangle {
-                radius: 22
-                color: backButton.hovered ? "#DDDDDD" : "transparent"
+                radius: 18
+                color: quitButton.hovered ? "#DDDDDD" : "transparent"
             }
         }
 
         Item {
-            Layout.fillWidth: navigationBar.isWelcomeStep
+            Layout.fillWidth: true
+        }
+
+        Button {
+            id: backButton
+            visible: ViewManager.backAndNextVisible
+            enabled: ViewManager.backEnabled
+            implicitWidth: 56
+            implicitHeight: 44
+            onClicked: ViewManager.back()
+
+            contentItem: Text {
+                text: "\u2190"
+                color: backButton.enabled ? "#1F1F1F" : "#888888"
+                font.pixelSize: 22
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            background: Rectangle {
+                radius: height / 2
+                color: backButton.enabled
+                    ? (backButton.pressed ? "#C8C8C8" : (backButton.hovered ? "#D8D8D8" : "#E4E4E4"))
+                    : "#ECECEC"
+                border.width: 1
+                border.color: backButton.enabled ? "#B8B8B8" : "#D0D0D0"
+            }
         }
 
         Button {
@@ -71,27 +95,8 @@ Rectangle {
             background: Rectangle {
                 radius: height / 2
                 color: nextButton.enabled
-                    ? (nextButton.pressed ? "#6A8EC3" : navigationBar.accentColor)
-                    : "#B0B0B0"
-            }
-        }
-
-        Button {
-            id: quitButton
-            visible: ViewManager.quitVisible
-            enabled: ViewManager.quitEnabled
-            flat: true
-            text: ViewManager.quitLabel
-            onClicked: ViewManager.quit()
-
-            ToolTip.visible: hovered
-            ToolTip.timeout: 5000
-            ToolTip.delay: 1000
-            ToolTip.text: ViewManager.quitTooltip
-
-            background: Rectangle {
-                radius: 18
-                color: quitButton.hovered ? "#DDDDDD" : "transparent"
+                    ? (nextButton.pressed ? navigationBar.accentPressedColor : navigationBar.accentColor)
+                    : navigationBar.accentDisabledColor
             }
         }
     }
