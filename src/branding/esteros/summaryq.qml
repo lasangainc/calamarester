@@ -9,6 +9,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 
+import esteros 1.0
 import "."
 
 Item {
@@ -49,6 +50,7 @@ Item {
                             Text {
                                 Layout.fillWidth: true
                                 text: model.title
+                                font.family: EsterOSTheme.fontFamily
                                 font.bold: true
                                 font.pixelSize: 14
                                 wrapMode: Text.WordWrap
@@ -58,6 +60,7 @@ Item {
                             Text {
                                 Layout.fillWidth: true
                                 text: model.message
+                                font.family: EsterOSTheme.fontFamily
                                 font.pixelSize: 12
                                 wrapMode: Text.WordWrap
                                 color: "#555555"

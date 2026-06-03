@@ -5,6 +5,7 @@
 import QtQuick 2.0
 import io.calamares.ui 1.0
 import calamares.slideshow 1.0
+import esteros 1.0
 
 Presentation {
     id: presentation
@@ -38,6 +39,7 @@ Presentation {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: qsTr("Installing esterOS…")
+                    font.family: EsterOSTheme.fontFamily
                     font.bold: true
                     font.pixelSize: 20
                 }
@@ -45,6 +47,7 @@ Presentation {
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: qsTr("Please wait while the system is being set up.")
+                    font.family: EsterOSTheme.fontFamily
                     font.pixelSize: 13
                     color: "#555555"
                     horizontalAlignment: Text.AlignHCenter

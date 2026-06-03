@@ -9,6 +9,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 
+import esteros 1.0
 import "."
 
 Item {
@@ -51,6 +52,7 @@ Item {
                             color: "#1F1F1F"
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
+                            font.family: EsterOSTheme.fontFamily
                             font.pixelSize: 13
                         }
 
