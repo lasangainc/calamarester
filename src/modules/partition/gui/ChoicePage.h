@@ -183,7 +183,6 @@ private:
 
     void applyEsterOSBranding();
     void updateEsterOSPresentation();
-    void updateEsterOSEmblemSize();
 };
 
 #endif  // CHOICEPAGE_H

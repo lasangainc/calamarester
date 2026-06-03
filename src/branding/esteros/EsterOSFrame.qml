@@ -16,15 +16,9 @@ Item {
     property alias sectionDescription: descText.text
     default property alias content: contentArea.data
 
-    readonly property int emblemMaxSize: 220
-    readonly property int emblemMinSize: 24
-    readonly property int emblemSize: {
-        var steps = ViewManager.rowCount()
-        if (steps <= 1)
-            return emblemMaxSize
-        var progress = ViewManager.currentStepIndex / (steps - 1)
-        return Math.round(emblemMaxSize - (emblemMaxSize - emblemMinSize) * progress)
-    }
+    readonly property int emblemLargeSize: 220
+    readonly property int emblemSmallSize: 48
+    readonly property int emblemSize: ViewManager.currentStepIndex === 0 ? emblemLargeSize : emblemSmallSize
 
     readonly property color cardColor: "#EBEBEB"
     readonly property color textColor: "#1F1F1F"

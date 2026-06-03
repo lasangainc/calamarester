@@ -34,7 +34,6 @@
 #include "Branding.h"
 #include "GlobalStorage.h"
 #include "JobQueue.h"
-#include "ViewManager.h"
 #include "compat/CheckBox.h"
 #include "partition/PartitionIterator.h"
 #include "partition/PartitionQuery.h"
@@ -63,21 +62,6 @@ using Calamares::Partition::PartitionIterator;
 using Calamares::Widgets::PrettyRadioButton;
 using InstallChoice = Config::InstallChoice;
 using SwapChoice = Config::SwapChoice;
-
-static int
-emblemSizeForStep( int stepIndex, int totalSteps )
-{
-    static constexpr int maxSize = 220;
-    static constexpr int minSize = 24;
-
-    if ( totalSteps <= 1 )
-    {
-        return maxSize;
-    }
-
-    const qreal progress = qreal( stepIndex ) / qreal( totalSteps - 1 );
-    return qRound( maxSize - ( maxSize - minSize ) * progress );
-}
 
 /**
  * @brief ChoicePage::ChoicePage is the default constructor. Called on startup as part of
@@ -179,6 +163,9 @@ ChoicePage::applyEsterOSBranding()
     auto* emblem = new QLabel( header );
     emblem->setAlignment( Qt::AlignHCenter );
     m_esterOSEmblem = emblem;
+    m_esterOSEmblem->setPixmap(
+        Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 48, 48 ) ) );
+    m_esterOSEmblem->setFixedSize( 48, 48 );
 
     auto* title = new QLabel( tr( "Choose where to install", "@title" ), header );
     title->setAlignment( Qt::AlignHCenter );
@@ -227,27 +214,6 @@ ChoicePage::applyEsterOSBranding()
     m_previewAfterLabel->hide();
     m_previewAfterFrame->hide();
     m_selectLabel->hide();
-
-    connect( Calamares::ViewManager::instance(),
-             &Calamares::ViewManager::currentStepChanged,
-             this,
-             &ChoicePage::updateEsterOSEmblemSize );
-    updateEsterOSEmblemSize();
-}
-
-void
-ChoicePage::updateEsterOSEmblemSize()
-{
-    if ( !m_esterOSBranding || !m_esterOSEmblem )
-    {
-        return;
-    }
-
-    const auto* viewManager = Calamares::ViewManager::instance();
-    const int size = emblemSizeForStep( viewManager->currentStepIndex(), viewManager->rowCount() );
-    m_esterOSEmblem->setPixmap(
-        Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( size, size ) ) );
-    m_esterOSEmblem->setFixedSize( size, size );
 }
 
 void

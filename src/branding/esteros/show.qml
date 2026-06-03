@@ -9,15 +9,7 @@ import calamares.slideshow 1.0
 Presentation {
     id: presentation
 
-    readonly property int emblemMaxSize: 220
-    readonly property int emblemMinSize: 24
-    readonly property int emblemSize: {
-        var steps = ViewManager.rowCount()
-        if (steps <= 1)
-            return emblemMaxSize
-        var progress = ViewManager.currentStepIndex / (steps - 1)
-        return Math.round(emblemMaxSize - (emblemMaxSize - emblemMinSize) * progress)
-    }
+    readonly property int emblemSize: 48
 
     function onActivate() {
         presentation.currentSlide = 0;
