@@ -43,4 +43,7 @@ struct LocaleNameParts
     int similarity( const LocaleNameParts& other ) const;
 };
 
+/** @brief Human-readable name for a locale identifier (e.g. en_US.UTF-8). */
+QString humanReadableLocaleName( const QString& localeCode, bool alwaysWithCountry = false );
+
 #endif

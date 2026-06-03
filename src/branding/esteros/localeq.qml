@@ -41,7 +41,7 @@ Item {
 
                     Button {
                         anchors.fill: parent
-                        text: modelData
+                        text: config.localeDisplayName(modelData)
                         flat: true
                         checkable: true
                         checked: config.currentLanguageCode === modelData

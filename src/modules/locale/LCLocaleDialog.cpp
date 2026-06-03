@@ -10,6 +10,8 @@
 
 #include "LCLocaleDialog.h"
 
+#include "LocaleNames.h"
+
 #include <QBoxLayout>
 #include <QDialogButtonBox>
 #include <QLabel>
@@ -31,13 +33,17 @@ LCLocaleDialog::LCLocaleDialog( const QString& guessedLCLocale, const QStringLis
                             "set for some command line user interface elements.<br/>"
                             "The current setting is <strong>%1</strong>.",
                             "@info" )
-                            .arg( guessedLCLocale ) );
+                            .arg( humanReadableLocaleName( guessedLCLocale ) ) );
     mainLayout->addWidget( upperText );
     setMinimumWidth( upperText->fontMetrics().height() * 24 );
 
     m_localesWidget = new QListWidget( this );
-    m_localesWidget->addItems( localeGenLines );
     m_localesWidget->setSelectionMode( QAbstractItemView::SingleSelection );
+    for ( const QString& localeCode : localeGenLines )
+    {
+        auto* item = new QListWidgetItem( humanReadableLocaleName( localeCode ), m_localesWidget );
+        item->setData( Qt::UserRole, localeCode );
+    }
     mainLayout->addWidget( m_localesWidget );
 
     int selected = -1;
@@ -86,5 +92,5 @@ QString
 LCLocaleDialog::selectedLCLocale()
 {
     const auto items = m_localesWidget->selectedItems();
-    return items.isEmpty() ? QString {} : items.first()->text();
+    return items.isEmpty() ? QString {} : items.first()->data( Qt::UserRole ).toString();
 }
