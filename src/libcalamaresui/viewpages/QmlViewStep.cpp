@@ -87,6 +87,7 @@ QmlViewStep::QmlViewStep( QObject* parent )
     layout->addWidget( m_spinner );
 
     m_qmlEngine->addImportPath( Calamares::qmlModulesDir().absolutePath() );
+    m_qmlEngine->addImportPath( Calamares::Branding::instance()->componentDirectory() );
 
     // QML Loading starts when the configuration for the module is set.
 }

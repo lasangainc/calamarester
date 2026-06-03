@@ -1,0 +1,69 @@
+/*
+ * SPDX-FileCopyrightText: no
+ * SPDX-License-Identifier: CC0-1.0
+ *
+ * esterOS minimalist installer stylesheet
+ */
+
+#mainApp {
+    background-color: #525252;
+}
+
+#viewManager,
+#viewManagerStack {
+    background-color: #EBEBEB;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+}
+
+/* Widget-based steps (partition, etc.) */
+#viewManager QLabel {
+    color: #1F1F1F;
+    font-size: 13px;
+}
+
+#viewManager QLineEdit,
+#viewManager QComboBox,
+#viewManager QSpinBox {
+    background-color: #FFFFFF;
+    border: 1px solid #D8D8D8;
+    border-radius: 18px;
+    padding: 6px 16px;
+    min-height: 28px;
+    color: #1F1F1F;
+}
+
+#viewManager QPushButton {
+    background-color: #7B9FD4;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 22px;
+    padding: 8px 24px;
+    min-height: 32px;
+    font-weight: 500;
+}
+
+#viewManager QPushButton:hover {
+    background-color: #6A8EC3;
+}
+
+#viewManager QPushButton:disabled {
+    background-color: #B0B0B0;
+    color: #EEEEEE;
+}
+
+#viewManager QCheckBox,
+#viewManager QRadioButton {
+    color: #1F1F1F;
+    spacing: 8px;
+}
+
+#viewManager QScrollArea {
+    background-color: transparent;
+    border: none;
+}
+
+#partitionBarView {
+    background-color: #FFFFFF;
+    border-radius: 16px;
+}
