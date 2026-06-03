@@ -43,7 +43,7 @@ PageTransitionEffect::setScale( qreal scale )
 void
 PageTransitionEffect::draw( QPainter* painter )
 {
-    if ( !sourceIsPixmap() && !source().isNull() )
+    if ( source() )
     {
         const QRectF bounds = sourceBoundingRect( Qt::LogicalCoordinates );
         const QPointF center = bounds.center();
@@ -52,8 +52,6 @@ PageTransitionEffect::draw( QPainter* painter )
         painter->translate( center );
         painter->scale( m_scale, m_scale );
         painter->translate( -center );
-        drawSource( painter );
-        return;
     }
 
     drawSource( painter );
