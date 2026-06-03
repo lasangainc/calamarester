@@ -2,6 +2,8 @@
    SPDX-FileCopyrightText: no
    SPDX-License-Identifier: CC0-1.0
 */
+import io.calamares.ui 1.0
+
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
@@ -29,11 +31,15 @@ Item {
         anchors.bottomMargin: 8
         spacing: 12
 
-        Text {
-            text: ":)"
+        Image {
             Layout.alignment: Qt.AlignHCenter
-            font.pixelSize: 40
-            color: root.textColor
+            source: "file:/" + Branding.imagePath(Branding.ProductLogo)
+            sourceSize.width: 64
+            sourceSize.height: 64
+            width: 64
+            height: 64
+            fillMode: Image.PreserveAspectFit
+            mipmap: true
         }
 
         Text {

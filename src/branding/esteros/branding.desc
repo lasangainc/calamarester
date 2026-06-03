@@ -31,6 +31,7 @@ strings:
 
 images:
     productIcon:         "icon.png"
+    productLogo:         "images/emblem.png"
 
 style:
    SidebarBackground:        "#EBEBEB"

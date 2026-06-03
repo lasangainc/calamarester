@@ -3,6 +3,7 @@
    SPDX-License-Identifier: CC0-1.0
 */
 import QtQuick 2.0
+import io.calamares.ui 1.0
 import calamares.slideshow 1.0
 
 Presentation {
@@ -23,10 +24,15 @@ Presentation {
                 anchors.centerIn: parent
                 spacing: 24
 
-                Text {
+                Image {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: ":)"
-                    font.pixelSize: 48
+                    source: "file:/" + Branding.imagePath(Branding.ProductLogo)
+                    sourceSize.width: 64
+                    sourceSize.height: 64
+                    width: 64
+                    height: 64
+                    fillMode: Image.PreserveAspectFit
+                    mipmap: true
                 }
 
                 Text {
