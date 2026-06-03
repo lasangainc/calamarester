@@ -17,7 +17,7 @@ Rectangle {
 
     readonly property color accentColor: "#2563EB"
     readonly property color accentPressedColor: "#1D4ED8"
-    readonly property color accentDisabledColor: "#93B4F5"
+    readonly property color accentDisabledColor: "#B0B0B0"
 
     RowLayout {
         id: buttonBar
