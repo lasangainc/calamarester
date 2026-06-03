@@ -162,7 +162,7 @@ ChoicePage::applyEsterOSBranding()
 
     auto* emblem = new QLabel( header );
     emblem->setAlignment( Qt::AlignHCenter );
-    emblem->setPixmap( Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 64, 64 ) ) );
+    emblem->setPixmap( Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 80, 80 ) ) );
 
     auto* title = new QLabel( tr( "Choose where to install", "@title" ), header );
     title->setAlignment( Qt::AlignHCenter );
