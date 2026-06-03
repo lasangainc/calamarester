@@ -25,44 +25,37 @@ Item {
             color: "#D8D8D8"
             radius: 20
 
-            ScrollView {
+            ListView {
+                id: layoutList
                 anchors.fill: parent
                 anchors.margins: 12
                 clip: true
-                ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+                spacing: 10
+                model: config.keyboardLayoutsModel
 
-                ColumnLayout {
-                    width: parent.width
-                    spacing: 10
+                delegate: Button {
+                    width: layoutList.width
+                    implicitHeight: 44
+                    text: model.label
+                    flat: true
+                    checkable: true
+                    checked: config.keyboardLayoutsModel.currentIndex === index
 
-                    Repeater {
-                        model: config.keyboardLayoutsModel
+                    onClicked: config.keyboardLayoutsModel.currentIndex = index
 
-                        Button {
-                            Layout.fillWidth: true
-                            implicitHeight: 44
-                            text: model.label
-                            flat: true
-                            checkable: true
-                            checked: config.keyboardLayoutsModel.currentIndex === index
+                    contentItem: Text {
+                        text: parent.text
+                        color: "#1F1F1F"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 13
+                    }
 
-                            onClicked: config.keyboardLayoutsModel.currentIndex = index
-
-                            contentItem: Text {
-                                text: parent.text
-                                color: "#1F1F1F"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.pixelSize: 13
-                            }
-
-                            background: Rectangle {
-                                radius: height / 2
-                                color: "#FFFFFF"
-                                border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
-                                border.width: parent.checked ? 2 : 1
-                            }
-                        }
+                    background: Rectangle {
+                        radius: height / 2
+                        color: "#FFFFFF"
+                        border.color: parent.checked ? "#7B9FD4" : "#E0E0E0"
+                        border.width: parent.checked ? 2 : 1
                     }
                 }
             }
