@@ -16,8 +16,8 @@ Item {
     property alias sectionDescription: descText.text
     default property alias content: contentArea.data
 
-    readonly property int emblemMaxSize: 128
-    readonly property int emblemMinSize: 48
+    readonly property int emblemMaxSize: 220
+    readonly property int emblemMinSize: 24
     readonly property int emblemSize: {
         var steps = ViewManager.rowCount()
         if (steps <= 1)

@@ -67,8 +67,8 @@ using SwapChoice = Config::SwapChoice;
 static int
 emblemSizeForStep( int stepIndex, int totalSteps )
 {
-    static constexpr int maxSize = 128;
-    static constexpr int minSize = 48;
+    static constexpr int maxSize = 220;
+    static constexpr int minSize = 24;
 
     if ( totalSteps <= 1 )
     {
