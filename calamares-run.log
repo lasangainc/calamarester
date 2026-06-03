@@ -1,0 +1,496 @@
+14:06:54 [6]: Calamares::Settings::Settings(const QString&, bool)
+    Using Calamares settings file at "/workspace/build/settings.conf" 
+14:06:54 [6]: void Logger::setupLogfile()
+    Using log file: "/home/ubuntu/.cache/calamares/session.log" 
+14:06:54 [6]: void CalamaresApplication::init()
+    Calamares version: 3.3.15.20260603-730dec91-dirty 
+    .. Using Qt version: 5.15.13 
+    .. Build type: Debug 
+    .. Using PyBind11 
+    .. Using settings: "/workspace/build/settings.conf" 
+    .. Using log file: "/home/ubuntu/.cache/calamares/session.log" 
+    .. Languages: ("ar", "as", "ast", "az", "az_AZ", "be", "bg", "bn", "bqi", "ca", "ca@valencia", "cs_CZ", "da", "de", "el", "en", "en_GB", "eo", "es", "es_AR", "es_MX", "es_PR", "et", "eu", "fa", "fi_FI", "fr", "fur", "gl", "gu", "he", "hi", "hr", "hu", "id", "ie", "is", "it_IT", "ja", "ja-Hira", "ka", "kk", "kn", "ko", "lo", "lt", "lv", "mk", "ml", "mr", "nb", "ne_NP", "nl", "oc", "pl", "pt_BR", "pt_PT", "ro", "ro_RO", "ru", "si", "sk", "sl", "sq", "sr", "sr@latin", "sv", "ta_IN", "te", "tg", "th", "tr_TR", "uk", "ur", "uz", "vi", "zh", "zh_CN", "zh_HK", "zh_TW") 
+14:06:54 [6]: bool Calamares::initQmlModulesDir()
+    Using Calamares QML directory "/workspace/build/src/qml" 
+14:06:54 [6]: Calamares::Branding::Branding(const QString&, QObject*, qreal)
+    Using Calamares branding file at "/workspace/build/src/branding/esteros/branding.desc" 
+14:06:54 [2]: Calamares::Branding::Branding(const QString&, QObject*, qreal)
+    WARNING: the branding component "/workspace/build/src/branding/esteros" does not ship translations. 
+14:06:54 [6]: Calamares::Branding::Branding(const QString&, QObject*, qreal)
+    Loaded branding component "esteros" 
+    .. Loaded QRC translation "tz_" "en_US" 
+    .. Loaded QRC translation "calamares_" "en_US" 
+    .. STARTUP: initSettings, initQmlPath, initBranding done 
+    .. STARTUP: initModuleManager: module init started 
+14:06:54 [6]: void Calamares::ModuleManager::doInit()
+    ModuleManager potential module descriptor is bad "/workspace/build/src/modules/CMakeFiles/module.desc" (missing) 
+    ..  ModuleManager module search path does not exist: "/usr/lib/x86_64-linux-gnu/calamares/modules" 
+    ..  Found 60 modules 
+14:06:54 [6]: void CalamaresApplication::initView()
+    STARTUP: initModuleManager: all modules init done 
+14:06:54 [6]: void CalamaresApplication::initView()
+    STARTUP: initJobQueue done 
+14:06:54 [6]: CalamaresWindow::CalamaresWindow(QWidget*)
+    Available desktop QSize(1920, 1171) minimum size QSize(1024, 520) 
+    .. Proposed window size: 1024 640 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&)
+    Looking for QML for "calamares-navigation" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/calamares-navigation.qml" 
+14:06:54 [6]: void CalamaresApplication::initView()
+    STARTUP: CalamaresWindow created; loadModules started 
+14:06:54 [6]: void Config::initLanguages()
+    Trying to match locale "en_US" 
+14:06:54 [6]: void Config::initLanguages()
+    Trying to match locale QLocale(English, Latin, United States) 
+14:06:54 [6]: void Config::setLocaleIndex(int)
+    Index 15 Selected locale "en" 
+    .. Loaded QRC translation "tz_" "en" 
+    .. Loaded QRC translation "calamares_" "en" 
+14:06:54 [2]: Calamares::GeoIP::Handler::Handler(const QString&, const QString&, const QString&)
+    WARNING: GeoIP style *none* does not do anything. 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "welcomeq@welcomeq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/welcomeq@welcomeq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/welcomeq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "welcomeq@welcomeq" loading "/workspace/build/src/branding/esteros/welcomeq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "welcomeq@welcomeq" loading complete. 
+14:06:54 [6]: QStringList loadLocales(const QString&)
+    Loading locales from "/usr/share/i18n/SUPPORTED" 
+    ..  Read 510 lines 
+    ..  After filtering 327 lines 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "localeq@localeq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/localeq@localeq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/localeq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "localeq@localeq" loading "/workspace/build/src/branding/esteros/localeq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "localeq@localeq" loading complete. 
+14:06:54 [6]: KeyboardModelsModel::KeyboardModelsModel(QObject*)
+    Loaded 186 keyboard models 
+14:06:54 [6]: KeyboardGroupsSwitchersModel::KeyboardGroupsSwitchersModel(QObject*)
+    Loaded 40 keyboard groups 
+14:06:54 [6]: void Config::getCurrentKeyboardLayoutXkb(QString&, QString&, QString&)
+    ("pc", "us", "inet(evdev)\"") 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "keyboardq@keyboardq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/keyboardq@keyboardq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/keyboardq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "keyboardq@keyboardq" loading "/workspace/build/src/branding/esteros/keyboardq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "keyboardq@keyboardq" loading complete. 
+14:06:54 [6]: Calamares::Partition::InternalManager::InternalManager()
+    KPMCore backend starting .. 
+14:06:54 [6]: DEBUG (Qt): Loaded backend plugin:  "pmsfdiskbackendplugin"
+    .. Backend @0x55d72e8cf6c0 "pmsfdiskbackendplugin" "1" 
+14:06:54 [2]: virtual void PartitionViewStep::setConfigurationMap(const QVariantMap&)
+    WARNING: Partition-module setting *defaultPartitionTableType* is unset, will use gpt for efi or msdos for bios 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "partition@partition" loading complete. 
+    .. libpwquality setting "minlen=0" 
+    .. libpwquality setting "minclass=0" 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "usersq@usersq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/usersq@usersq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/usersq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "usersq@usersq" loading "/workspace/build/src/branding/esteros/usersq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "usersq@usersq" loading complete. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "summaryq@summaryq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/summaryq@summaryq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/summaryq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "summaryq@summaryq" loading "/workspace/build/src/branding/esteros/summaryq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "summaryq@summaryq" loading complete. 
+14:06:54 [6]: void Calamares::ModuleManager::loadModules()
+    Module "partition@partition" already loaded. 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML import paths: 
+     "/workspace/build/src/qml" 
+     "/workspace/build" 
+     "qrc:/qt-project.org/imports" 
+     "/usr/lib/x86_64-linux-gnu/qt5/qml" 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML load on startup, API 2. 
+14:06:54 [6]: virtual void Calamares::CppJobModule::loadSelf()
+    CppJobModule "machineid@machineid" loading complete. 
+14:06:54 [6]: QStringList loadLocales(const QString&)
+    Loading locales from "/usr/share/i18n/SUPPORTED" 
+    ..  Read 510 lines 
+    ..  After filtering 327 lines 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "locale@locale" loading complete. 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML import paths: 
+     "/workspace/build/src/qml" 
+     "/workspace/build" 
+     "qrc:/qt-project.org/imports" 
+     "/usr/lib/x86_64-linux-gnu/qt5/qml" 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML load on startup, API 2. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: KeyboardModelsModel::KeyboardModelsModel(QObject*)
+    Loaded 186 keyboard models 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: KeyboardGroupsSwitchersModel::KeyboardGroupsSwitchersModel(QObject*)
+    Loaded 40 keyboard groups 
+14:06:54 [6]: KeyboardPage::KeyboardPage(Config*, QWidget*)
+    Variants now total= 0 selected= -1 
+14:06:54 [6]: KeyboardPage::KeyboardPage(Config*, QWidget*)
+    Groups now total= 40 selected= -1 
+    .. Loaded QRC translation "kb_" "en" 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: void Config::getCurrentKeyboardLayoutXkb(QString&, QString&, QString&)
+    ("pc", "us", "inet(evdev)\"") 
+14:06:54 [2]: bool KeyBoardPreview::loadCodes()
+    WARNING: ckbcomp not found , keyboard preview disabled 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.UnknownObject", "No such object path '/Helper'")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.UnknownObject", "No such object path '/Helper'")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.NoReply", "Message recipient disconnected from message bus without replying")
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "keyboard@keyboard" loading complete. 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML import paths: 
+     "/workspace/build/src/qml" 
+     "/workspace/build" 
+     "qrc:/qt-project.org/imports" 
+     "/usr/lib/x86_64-linux-gnu/qt5/qml" 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML load on startup, API 2. 
+14:06:54 [6]: virtual void Calamares::CppJobModule::loadSelf()
+    CppJobModule "initcpio@initcpio" loading complete. 
+    .. libpwquality setting "minlen=0" 
+    .. libpwquality setting "minclass=0" 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "users@users" loading complete. 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML import paths: 
+     "/workspace/build/src/qml" 
+     "/workspace/build" 
+     "qrc:/qt-project.org/imports" 
+     "/usr/lib/x86_64-linux-gnu/qt5/qml" 
+14:06:54 [6]: Calamares::SlideshowQML::SlideshowQML(QWidget*)
+    QML load on startup, API 2. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: virtual void Calamares::CppJobModule::loadSelf()
+    CppJobModule "initramfs@initramfs" loading complete. 
+14:06:54 [6]: virtual void Calamares::CppJobModule::loadSelf()
+    CppJobModule "umount@umount" loading complete. 
+14:06:54 [6]: QString Calamares::searchQmlFile(QmlSearch, const QString&, const ModuleSystem::InstanceKey&)
+    Looking for QML for "finishedq@finishedq" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/finishedq@finishedq.qml" 
+    .. Looking at QML file "/workspace/build/src/branding/esteros/finishedq.qml" 
+14:06:54 [6]: virtual void Calamares::QmlViewStep::setConfigurationMap(const QVariantMap&)
+    QmlViewStep "finishedq@finishedq" loading "/workspace/build/src/branding/esteros/finishedq.qml" 
+14:06:54 [6]: virtual void Calamares::ViewModule::loadSelf()
+    ViewModule "finishedq@finishedq" loading complete. 
+14:06:54 [2]: void Calamares::SlideshowQML::loadQmlV2Complete()
+    WARNING: QML component not ready: (file:///workspace/build/src/branding/esteros/show.qml:6:1: module "calamares.slideshow" is not installed
+    import calamares.slideshow 1.0
+    ^) 
+14:06:54 [2]: void Calamares::SlideshowQML::loadQmlV2Complete()
+    WARNING: QML component not ready: (file:///workspace/build/src/branding/esteros/show.qml:6:1: module "calamares.slideshow" is not installed
+    import calamares.slideshow 1.0
+    ^) 
+    .. Loaded QRC translation "kb_" "en" 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [2]: void Calamares::SlideshowQML::loadQmlV2Complete()
+    WARNING: QML component not ready: (file:///workspace/build/src/branding/esteros/show.qml:6:1: module "calamares.slideshow" is not installed
+    import calamares.slideshow 1.0
+    ^) 
+14:06:54 [2]: void Calamares::SlideshowQML::loadQmlV2Complete()
+    WARNING: QML component not ready: (file:///workspace/build/src/branding/esteros/show.qml:6:1: module "calamares.slideshow" is not installed
+    import calamares.slideshow 1.0
+    ^) 
+14:06:54 [6]: void CalamaresApplication::initViewSteps()
+    STARTUP: loadModules for all modules done 
+14:06:54 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.UnknownObject", "No such object path '/Helper'")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.NoReply", "Message recipient disconnected from message bus without replying")
+14:06:54 [6]: void CalamaresApplication::initViewSteps()
+    STARTUP: Window now visible and ProgressTreeView populated 
+    .. 14 view steps loaded. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/welcomeq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/welcomeq.qml" creating object 
+14:06:54 [2]: WARNING (Qt): qrc:/Requirements.qml:17:1: module "org.kde.kirigami" is not installed
+14:06:54 [6]: void Calamares::callQmlFunction(QQuickItem*, const char*)
+    QML "onActivate()" is missing. 
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/usersq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/usersq.qml" creating object 
+14:06:54 [2]: add_check_libpwquality(PasswordCheckList&, const QVariant&)::<lambda(const QString&)>
+    WARNING: libpwquality error -20 No password supplied 
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/localeq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/localeq.qml" creating object 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:06:54 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: QList<Device*> PartUtils::getDevices(DeviceType)
+    Removing unsuitable devices: 0 candidates. 
+    .. there are 0 devices left. 
+14:06:54 [6]: void PartitionCoreModule::doInit()
+    LIST OF DETECTED DEVICES: 
+    .. node	capacity	name	prettyName 
+    .. 0 devices detected. 
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/keyboardq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/keyboardq.qml" creating object 
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/summaryq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/summaryq.qml" creating object 
+14:06:54 [6]: OsproberEntryList PartUtils::runOsprober(DeviceModel*)
+    os-prober gave no output. 
+14:06:54 [2]: WARNING (Qt): QDBusError("org.freedesktop.DBus.Error.AccessDenied", "")
+14:06:54 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:06:54 [6]: void Calamares::QmlViewStep::loadComplete()
+    QML component "/workspace/build/src/branding/esteros/finishedq.qml" QQmlComponent::Ready 
+    .. QML component complete "/workspace/build/src/branding/esteros/finishedq.qml" creating object 
+14:06:54 [2]: void ChoicePage::updateActionDescriptionsTr()
+    WARNING: Invalid osprober count, labels and buttons not updated. 
+14:06:54 [6]: bool ChoicePage::calculateNextEnabled() const
+    No partitioning choice has been made yet 
+14:06:54 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:06:54 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:06:54 [6]: void applyXkb(const BasicLayoutInfo&, AdditionalLayoutInfo&)
+    xkbmap selection changed to:  "us" - "" 
+14:06:55 [6]: void applyXkb(const BasicLayoutInfo&, AdditionalLayoutInfo&)
+    xkbmap selection changed to:  "us" - "" 
+14:06:59 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:06:59 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:06:59 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:06:59 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:06:59 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:06:59 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:04 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:04 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:04 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:04 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:04 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:04 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:09 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:09 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:09 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:09 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:09 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:09 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:14 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:14 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:14 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:14 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:14 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:14 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:19 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:19 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:19 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:19 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:19 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:19 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:24 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:24 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:24 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:24 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:24 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:24 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
+14:07:29 [6]: void Calamares::ModuleManager::checkRequirements()
+    Checking module requirements .. 
+14:07:29 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 1 requirement results from "partition" 
+14:07:29 [6]: Calamares::RequirementsList GeneralRequirements::checkRequirements()
+    GeneralRequirements output: 
+     storage :   5905580032 
+     enoughStorage :   false 
+     RAM :   1073741824 
+     enoughRam :   true 
+     hasPower :   true 
+     hasInternet :   true 
+     isRoot :   false 
+14:07:29 [6]: void Calamares::RequirementsChecker::addCheckedRequirements(Calamares::Module*)
+    Got 6 requirement results from "welcomeq" 
+14:07:29 [6]: void Calamares::RequirementsChecker::finished()
+    All requirements have been checked. 
+14:07:29 [6]: void Calamares::RequirementsModel::describe() const
+    Requirements model has 7 items 
+    .. requirement 0 "storage" satisfied? false mandatory? false 
+    .. requirement 1 "ram" satisfied? true mandatory? true 
+    .. requirement 2 "power" satisfied? true mandatory? false 
+    .. requirement 3 "internet" satisfied? true mandatory? false 
+    .. requirement 4 "root" satisfied? false mandatory? false 
+    .. requirement 5 "screen" satisfied? true mandatory? false 
+    .. requirement 6 "partitions" satisfied? false mandatory? true 
