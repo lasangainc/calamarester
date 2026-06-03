@@ -177,11 +177,13 @@ private:
     bool m_esterOSBranding = false;
 
     QLabel* m_esterOSEmptyLabel = nullptr;
+    QLabel* m_esterOSEmblem = nullptr;
 
     QMutex m_coreMutex;
 
     void applyEsterOSBranding();
     void updateEsterOSPresentation();
+    void updateEsterOSEmblemSize();
 };
 
 #endif  // CHOICEPAGE_H

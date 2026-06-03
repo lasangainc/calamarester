@@ -16,8 +16,8 @@ Item {
 
     EsterOSFrame {
         anchors.fill: parent
-        sectionTitle: qsTr("Get started using esterOS")
-        sectionDescription: qsTr("This wizard will help you install esterOS to your computer.")
+        sectionTitle: qsTr("Get started using OriginUI")
+        sectionDescription: qsTr("This wizard will help you install OriginUI to your computer.")
     }
 
     Loader {

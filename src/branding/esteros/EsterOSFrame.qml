@@ -1,4 +1,4 @@
-/* Shared esterOS step frame
+/* Shared OriginUI step frame
    SPDX-FileCopyrightText: no
    SPDX-License-Identifier: CC0-1.0
 */
@@ -15,6 +15,16 @@ Item {
     property alias sectionTitle: titleText.text
     property alias sectionDescription: descText.text
     default property alias content: contentArea.data
+
+    readonly property int emblemMaxSize: 128
+    readonly property int emblemMinSize: 48
+    readonly property int emblemSize: {
+        var steps = ViewManager.rowCount()
+        if (steps <= 1)
+            return emblemMaxSize
+        var progress = ViewManager.currentStepIndex / (steps - 1)
+        return Math.round(emblemMaxSize - (emblemMaxSize - emblemMinSize) * progress)
+    }
 
     readonly property color cardColor: "#EBEBEB"
     readonly property color textColor: "#1F1F1F"
@@ -34,12 +44,15 @@ Item {
         Image {
             Layout.alignment: Qt.AlignHCenter
             source: "file:/" + Branding.imagePath(Branding.ProductLogo)
-            sourceSize.width: 64
-            sourceSize.height: 64
-            width: 64
-            height: 64
+            sourceSize.width: root.emblemSize
+            sourceSize.height: root.emblemSize
+            width: root.emblemSize
+            height: root.emblemSize
             fillMode: Image.PreserveAspectFit
             mipmap: true
+
+            Behavior on width { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+            Behavior on height { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
         }
 
         Text {
