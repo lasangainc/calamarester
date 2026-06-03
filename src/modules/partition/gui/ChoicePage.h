@@ -174,8 +174,14 @@ private:
 
     bool m_enableEncryptionWidget = false;
     bool m_preCheckActivated = false;
+    bool m_esterOSBranding = false;
+
+    QLabel* m_esterOSEmptyLabel = nullptr;
 
     QMutex m_coreMutex;
+
+    void applyEsterOSBranding();
+    void updateEsterOSPresentation();
 };
 
 #endif  // CHOICEPAGE_H

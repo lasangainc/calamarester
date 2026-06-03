@@ -12,14 +12,17 @@
 #viewManager,
 #viewManagerStack {
     background-color: #EBEBEB;
-    border-top-left-radius: 32px;
-    border-top-right-radius: 32px;
+    border: none;
 }
 
-/* Widget-based steps (partition, etc.) */
+#viewManager QWidget {
+    background-color: transparent;
+}
+
 #viewManager QLabel {
     color: #1F1F1F;
     font-size: 13px;
+    background: transparent;
 }
 
 #viewManager QLineEdit,
@@ -31,6 +34,19 @@
     padding: 6px 16px;
     min-height: 28px;
     color: #1F1F1F;
+}
+
+#viewManager QComboBox::drop-down {
+    border: none;
+    width: 28px;
+}
+
+#viewManager QComboBox::down-arrow {
+    image: none;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #555555;
+    margin-right: 12px;
 }
 
 #viewManager QPushButton {
@@ -63,7 +79,62 @@
     border: none;
 }
 
+#esterOSDeviceCombo {
+    min-width: 260px;
+    min-height: 40px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+PrettyRadioButton#esterOSOption {
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 22px;
+    min-height: 44px;
+    padding: 4px 16px;
+}
+
+PrettyRadioButton#esterOSOption:hover {
+    border-color: #7B9FD4;
+}
+
+PrettyRadioButton#esterOSOption QRadioButton {
+    width: 0px;
+    height: 0px;
+    margin: 0px;
+    padding: 0px;
+    opacity: 0;
+}
+
+PrettyRadioButton#esterOSOption QRadioButton::indicator {
+    width: 0px;
+    height: 0px;
+    border: none;
+}
+
+PrettyRadioButton#esterOSOption QLabel {
+    font-size: 13px;
+    color: #1F1F1F;
+    padding-left: 4px;
+}
+
+PrettyRadioButton#esterOSOption:checked,
+PrettyRadioButton#esterOSOption QRadioButton:checked {
+    background-color: #FFFFFF;
+}
+
+PrettyRadioButton#esterOSOption QRadioButton:checked {
+    border: 2px solid #7B9FD4;
+}
+
 #partitionBarView {
     background-color: #FFFFFF;
     border-radius: 16px;
+}
+
+#bootInfoIcon,
+#bootInfoLabel,
+#deviceInfoIcon,
+#deviceInfoLabel {
+    background: transparent;
 }
