@@ -22,7 +22,7 @@ Item {
 
     Loader {
         anchors.fill: parent
-        active: !config.requirementsModel.satisfiedRequirements
+        active: !config.requirementsModel.satisfiedMandatory
         source: "qrc:/Requirements.qml"
     }
 }
