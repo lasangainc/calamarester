@@ -26,6 +26,7 @@
 #include "Branding.h"
 #include "GlobalStorage.h"
 #include "JobQueue.h"
+#include "Settings.h"
 #include "utils/Gui.h"
 #include "utils/Logger.h"
 #include "utils/QtCompat.h"
@@ -961,15 +962,17 @@ PartitionViewStep::checkRequirements()
     }
 
     Calamares::RequirementsList l;
+    const bool hasDevices = m_core->deviceModel()->rowCount() > 0;
+    const bool mandatoryInDebug = Calamares::Settings::instance() && Calamares::Settings::instance()->debugMode();
     l.append( {
         QLatin1String( "partitions" ),
         [] { return tr( "has at least one disk device available." ); },
         [] { return tr( "There are no partitions to install on." ); },
-        m_core->deviceModel()->rowCount() > 0,  // satisfied
+        hasDevices,
 #ifdef DEBUG_PARTITION_UNSAFE
         false  // optional
 #else
-        true  // required
+        mandatoryInDebug ? false : true  // optional in debug mode for UI preview
 #endif
     } );
 

@@ -24,5 +24,4 @@ calamares_add_plugin(summaryq
     LINK_PRIVATE_LIBRARIES
         calamaresui
     SHARED_LIB
-    NO_CONFIG
 )

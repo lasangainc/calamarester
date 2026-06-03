@@ -127,10 +127,115 @@ ChoicePage::ChoicePage( Config* config, QWidget* parent )
     m_reuseHomeCheckBox->hide();
     gs->insert( "reuseHome", false );
 
+    m_esterOSBranding = Calamares::Branding::instance()->componentName() == QStringLiteral( "esteros" );
+    if ( m_esterOSBranding )
+    {
+        applyEsterOSBranding();
+    }
+
     updateNextEnabled();
 }
 
 ChoicePage::~ChoicePage() {}
+
+void
+ChoicePage::applyEsterOSBranding()
+{
+    setObjectName( QStringLiteral( "esterOSChoicePage" ) );
+
+    m_mainLayout->setContentsMargins( 40, 28, 40, 8 );
+    m_mainLayout->setSpacing( 14 );
+
+    if ( m_drivesLayout->count() > 0 )
+    {
+        if ( QWidget* bootWidget = m_drivesLayout->itemAt( 0 )->widget() )
+        {
+            bootWidget->hide();
+        }
+    }
+    m_deviceInfoWidget->hide();
+
+    auto* header = new QWidget( this );
+    auto* headerLayout = new QVBoxLayout( header );
+    headerLayout->setContentsMargins( 0, 0, 0, 0 );
+    headerLayout->setSpacing( 8 );
+
+    auto* emblem = new QLabel( header );
+    emblem->setAlignment( Qt::AlignHCenter );
+    emblem->setPixmap( Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 64, 64 ) ) );
+
+    auto* title = new QLabel( tr( "Choose where to install", "@title" ), header );
+    title->setAlignment( Qt::AlignHCenter );
+    QFont titleFont = title->font();
+    titleFont.setBold( true );
+    titleFont.setPixelSize( 20 );
+    title->setFont( titleFont );
+
+    auto* description = new QLabel(
+        tr( "Pick a storage device and how esterOS should use it.", "@info" ), header );
+    description->setAlignment( Qt::AlignHCenter );
+    description->setWordWrap( true );
+    QFont descFont = description->font();
+    descFont.setPixelSize( 13 );
+    description->setFont( descFont );
+    description->setStyleSheet( QStringLiteral( "color: #555555;" ) );
+
+    headerLayout->addWidget( emblem );
+    headerLayout->addWidget( title );
+    headerLayout->addWidget( description );
+    m_mainLayout->insertWidget( 0, header );
+
+    m_drivesLabel->setText( tr( "Storage device", "@label" ) );
+    m_drivesLabel->setAlignment( Qt::AlignHCenter );
+    m_drivesCombo->setObjectName( QStringLiteral( "esterOSDeviceCombo" ) );
+    m_drivesLayout->setAlignment( Qt::AlignHCenter );
+
+    m_itemsScrollArea->setObjectName( QStringLiteral( "esterOSOptionsArea" ) );
+    m_itemsScrollArea->setStyleSheet(
+        QStringLiteral( "QScrollArea#esterOSOptionsArea { background-color: #D8D8D8; border: none; border-radius: 20px; }" ) );
+    scrollAreaWidgetContents->setObjectName( QStringLiteral( "esterOSOptionsContents" ) );
+    scrollAreaWidgetContents->setStyleSheet( QStringLiteral( "background: transparent;" ) );
+    m_itemsLayout->setSpacing( 10 );
+    m_itemsLayout->setContentsMargins( 12, 12, 12, 12 );
+
+    m_esterOSEmptyLabel = new QLabel(
+        tr( "No storage devices were found. Connect a disk to continue.", "@info" ), this );
+    m_esterOSEmptyLabel->setWordWrap( true );
+    m_esterOSEmptyLabel->setAlignment( Qt::AlignHCenter );
+    m_esterOSEmptyLabel->setStyleSheet( QStringLiteral( "color: #555555; padding: 24px;" ) );
+    m_itemsLayout->addWidget( m_esterOSEmptyLabel );
+
+    hLine->hide();
+    m_previewBeforeLabel->hide();
+    m_previewBeforeFrame->hide();
+    m_previewAfterLabel->hide();
+    m_previewAfterFrame->hide();
+    m_selectLabel->hide();
+}
+
+void
+ChoicePage::updateEsterOSPresentation()
+{
+    if ( !m_esterOSBranding )
+    {
+        return;
+    }
+
+    const bool hasDevice = selectedDevice() != nullptr;
+    if ( m_esterOSEmptyLabel )
+    {
+        m_esterOSEmptyLabel->setVisible( !hasDevice );
+    }
+
+    for ( Calamares::Widgets::PrettyRadioButton* button :
+          { m_alongsideButton, m_eraseButton, m_replaceButton, m_somethingElseButton } )
+    {
+        if ( button )
+        {
+            button->setObjectName( QStringLiteral( "esterOSOption" ) );
+        }
+    }
+}
 
 void
 ChoicePage::retranslate()
@@ -193,6 +298,7 @@ ChoicePage::init( PartitionCoreModule* core )
         m_reuseHomeCheckBox, Calamares::checkBoxStateChangedSignal, this, &ChoicePage::onHomeCheckBoxStateChanged );
 
     ChoicePage::applyDeviceChoice();
+    updateEsterOSPresentation();
 }
 
 /** @brief Creates a combobox with the given choices in it.
@@ -304,12 +410,25 @@ ChoicePage::setupChoices()
     m_itemsLayout->addWidget( m_replaceButton );
     m_itemsLayout->addWidget( m_eraseButton );
 
+    if ( m_esterOSBranding )
+    {
+        for ( Calamares::Widgets::PrettyRadioButton* button :
+              { m_alongsideButton, m_replaceButton, m_eraseButton } )
+        {
+            button->setObjectName( QStringLiteral( "esterOSOption" ) );
+        }
+    }
+
     m_somethingElseButton = new PrettyRadioButton;
     m_somethingElseButton->setIconSize( iconSize );
     m_somethingElseButton->setIcon(
         Calamares::defaultPixmap( Calamares::PartitionManual, Calamares::Original, iconSize ) );
     m_itemsLayout->addWidget( m_somethingElseButton );
     m_somethingElseButton->addToGroup( m_grp, InstallChoice::Manual );
+    if ( m_esterOSBranding )
+    {
+        m_somethingElseButton->setObjectName( QStringLiteral( "esterOSOption" ) );
+    }
 
     m_itemsLayout->addStretch();
 
@@ -376,6 +495,7 @@ ChoicePage::hideButtons()
     m_replaceButton->hide();
     m_alongsideButton->hide();
     m_somethingElseButton->hide();
+    updateEsterOSPresentation();
 }
 
 void
@@ -454,6 +574,7 @@ ChoicePage::continueApplyDeviceChoice()
 
     Q_EMIT actionChosen();
     Q_EMIT deviceChosen();
+    updateEsterOSPresentation();
 }
 
 void

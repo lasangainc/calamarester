@@ -23,6 +23,7 @@
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
+#include <QDir>
 #include <QQuickItem>
 #if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 #include <QQuickWidget>
@@ -87,6 +88,8 @@ QmlViewStep::QmlViewStep( QObject* parent )
     layout->addWidget( m_spinner );
 
     m_qmlEngine->addImportPath( Calamares::qmlModulesDir().absolutePath() );
+    const QString brandDir = Calamares::Branding::instance()->componentDirectory();
+    m_qmlEngine->addImportPath( QDir( brandDir ).absoluteFilePath( QStringLiteral( ".." ) ) );
 
     // QML Loading starts when the configuration for the module is set.
 }

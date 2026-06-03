@@ -1,0 +1,48 @@
+# SPDX-FileCopyrightText: no
+# SPDX-License-Identifier: CC0-1.0
+#
+# esterOS branding — minimalist centered installer UI
+---
+componentName:  esteros
+
+welcomeStyleCalamares:   false
+welcomeExpandingLogo:    false
+
+windowExpanding:    noexpand
+windowSize:         480px,640px
+windowPlacement:    center
+
+sidebar:            none
+navigation:         qml
+
+strings:
+    productName:         esterOS
+    shortProductName:    esterOS
+    version:             1.0
+    shortVersion:        1.0
+    versionedName:       esterOS 1.0
+    shortVersionedName:  esterOS
+    bootloaderEntryName: esterOS
+    productUrl:          ""
+    supportUrl:          ""
+    knownIssuesUrl:      ""
+    releaseNotesUrl:     ""
+    donateUrl:           ""
+
+images:
+    productIcon:         "icon.png"
+    productLogo:         "images/emblem.png"
+
+style:
+   SidebarBackground:        "#EBEBEB"
+   SidebarText:              "#1F1F1F"
+   SidebarTextCurrent:       "#1F1F1F"
+   SidebarBackgroundCurrent: "#7B9FD4"
+
+slideshow:               "show.qml"
+slideshowAPI:            2
+
+uploadServer :
+    type :    "none"
+    url :     ""
+    sizeLimit : -1

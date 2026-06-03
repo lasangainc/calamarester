@@ -55,3 +55,6 @@ CMakeLists.txt.user
 # Kate
 *.kate-swp
 tags
+build.log
+calamares-run.log
+
