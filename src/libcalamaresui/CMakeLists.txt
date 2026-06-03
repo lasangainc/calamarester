@@ -28,6 +28,7 @@ set(calamaresui_SOURCES
     widgets/FixedAspectRatioLabel.cpp
     widgets/PrettyRadioButton.cpp
     widgets/LogWidget.cpp
+    widgets/PageTransitionEffect.cpp
     widgets/TranslationFix.cpp
     widgets/WaitingWidget.cpp
     widgets/waitingspinnerwidget.cpp

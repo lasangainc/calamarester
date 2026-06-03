@@ -19,6 +19,8 @@
 #include <QPushButton>
 #include <QStackedWidget>
 
+#include <functional>
+
 namespace Calamares
 {
 /**
@@ -248,6 +250,9 @@ private:
     void updateCancelEnabled( bool enabled );
     void updateBackAndNextVisibility( bool visible );
 
+    void animateStepChange( int fromIndex, int toIndex, const std::function< void() >& stepChange );
+    void animatePageEnter( QWidget* page );
+
     inline bool currentStepValid() const { return ( 0 <= m_currentStep ) && ( m_currentStep < m_steps.length() ); }
 
     static ViewManager* s_instance;
@@ -257,6 +262,8 @@ private:
 
     QWidget* m_widget;
     QStackedWidget* m_stack;
+
+    bool m_transitioning = false;
 
     bool m_nextEnabled = false;
     QString m_nextLabel;

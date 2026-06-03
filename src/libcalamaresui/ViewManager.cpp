@@ -25,15 +25,23 @@
 #include "viewpages/ExecutionViewStep.h"
 #include "viewpages/ViewStep.h"
 #include "widgets/ErrorDialog.h"
+#include "widgets/PageTransitionEffect.h"
 #include "widgets/TranslationFix.h"
 
 #include <QApplication>
 #include <QBoxLayout>
 #include <QClipboard>
 #include <QDialogButtonBox>
+#include <QEasingCurve>
 #include <QFile>
+#include <QParallelAnimationGroup>
+#include <QPropertyAnimation>
 #include <QMessageBox>
 #include <QMetaObject>
+#include <QQuickItem>
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+#include <QQuickWidget>
+#endif
 
 #define UPDATE_BUTTON_PROPERTY( name, value ) \
     do \
@@ -44,6 +52,117 @@
 
 namespace Calamares
 {
+
+namespace
+{
+constexpr int pageTransitionDurationMs = 250;
+constexpr qreal pageTransitionScale = 0.94;
+
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+QQuickItem*
+pageQuickRoot( QWidget* page )
+{
+    if ( !page )
+    {
+        return nullptr;
+    }
+    for ( QQuickWidget* quickWidget : page->findChildren< QQuickWidget* >() )
+    {
+        if ( QQuickItem* root = quickWidget->rootObject() )
+        {
+            return root;
+        }
+    }
+    return nullptr;
+}
+#endif
+
+struct PageTransitionTarget
+{
+    QObject* object = nullptr;
+    QQuickItem* quickItem = nullptr;
+    PageTransitionEffect* effect = nullptr;
+};
+
+PageTransitionTarget
+transitionTargetForPage( QWidget* page )
+{
+    PageTransitionTarget target;
+    if ( !page )
+    {
+        return target;
+    }
+
+#if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
+    target.quickItem = pageQuickRoot( page );
+#endif
+    if ( target.quickItem )
+    {
+        target.quickItem->setTransformOrigin( QQuickItem::Center );
+        target.object = target.quickItem;
+        return target;
+    }
+
+    target.effect = new PageTransitionEffect( page );
+    page->setGraphicsEffect( target.effect );
+    target.object = target.effect;
+    return target;
+}
+
+void
+clearTransitionTarget( QWidget* page, PageTransitionTarget& target )
+{
+    if ( target.effect && page )
+    {
+        page->setGraphicsEffect( nullptr );
+        target.effect = nullptr;
+    }
+}
+
+void
+setTransitionValues( const PageTransitionTarget& target, qreal opacity, qreal scale )
+{
+    if ( target.quickItem )
+    {
+        target.quickItem->setOpacity( opacity );
+        target.quickItem->setScale( scale );
+        return;
+    }
+    if ( target.effect )
+    {
+        target.effect->setOpacity( opacity );
+        target.effect->setScale( scale );
+    }
+}
+
+QParallelAnimationGroup*
+createOpacityScaleAnimation( QObject* target,
+                             qreal fromOpacity,
+                             qreal toOpacity,
+                             qreal fromScale,
+                             qreal toScale,
+                             QObject* parent )
+{
+    auto* group = new QParallelAnimationGroup( parent );
+
+    auto* opacityAnimation = new QPropertyAnimation( target, "opacity", group );
+    opacityAnimation->setDuration( pageTransitionDurationMs );
+    opacityAnimation->setStartValue( fromOpacity );
+    opacityAnimation->setEndValue( toOpacity );
+    opacityAnimation->setEasingCurve( QEasingCurve::OutCubic );
+
+    auto* scaleAnimation = new QPropertyAnimation( target, "scale", group );
+    scaleAnimation->setDuration( pageTransitionDurationMs );
+    scaleAnimation->setStartValue( fromScale );
+    scaleAnimation->setEndValue( toScale );
+    scaleAnimation->setEasingCurve( QEasingCurve::OutCubic );
+
+    group->addAnimation( opacityAnimation );
+    group->addAnimation( scaleAnimation );
+    return group;
+}
+
+}  // namespace
 
 ViewManager* ViewManager::s_instance = nullptr;
 
@@ -218,9 +337,101 @@ ViewManager::onInitComplete()
     if ( m_steps.count() > 0 )
     {
         m_steps.first()->onActivate();
+        if ( m_stack->count() > 0 )
+        {
+            animatePageEnter( m_stack->widget( 0 ) );
+        }
     }
 
     emit currentStepChanged();
+}
+
+void
+ViewManager::animatePageEnter( QWidget* page )
+{
+    if ( !page )
+    {
+        return;
+    }
+
+    PageTransitionTarget target = transitionTargetForPage( page );
+    if ( !target.object )
+    {
+        return;
+    }
+
+    setTransitionValues( target, 0.0, pageTransitionScale );
+
+    auto* animation = createOpacityScaleAnimation(
+        target.object, 0.0, 1.0, pageTransitionScale, 1.0, this );
+    connect( animation,
+             &QParallelAnimationGroup::finished,
+             this,
+             [ page, target ]() mutable { clearTransitionTarget( page, target ); } );
+    animation->start( QAbstractAnimation::DeleteWhenStopped );
+}
+
+void
+ViewManager::animateStepChange( int fromIndex, int toIndex, const std::function< void() >& stepChange )
+{
+    QWidget* outgoingPage = m_stack->widget( fromIndex );
+    QWidget* incomingPage = m_stack->widget( toIndex );
+    if ( !outgoingPage || !incomingPage || outgoingPage == incomingPage )
+    {
+        stepChange();
+        return;
+    }
+
+    PageTransitionTarget outgoing = transitionTargetForPage( outgoingPage );
+    if ( !outgoing.object )
+    {
+        stepChange();
+        return;
+    }
+
+    m_transitioning = true;
+    setTransitionValues( outgoing, 1.0, 1.0 );
+
+    auto* outAnimation = createOpacityScaleAnimation(
+        outgoing.object, 1.0, 0.0, 1.0, pageTransitionScale, this );
+    connect( outAnimation,
+             &QParallelAnimationGroup::finished,
+             this,
+             [ this, outgoingPage, incomingPage, outgoing, stepChange ]() mutable
+             {
+                 clearTransitionTarget( outgoingPage, outgoing );
+
+                 stepChange();
+
+                 PageTransitionTarget incoming = transitionTargetForPage( incomingPage );
+                 if ( !incoming.object )
+                 {
+                     m_transitioning = false;
+                     updateButtonLabels();
+                     return;
+                 }
+
+                 setTransitionValues( incoming, 0.0, pageTransitionScale );
+
+                 auto* inAnimation = createOpacityScaleAnimation(
+                     incoming.object, 0.0, 1.0, pageTransitionScale, 1.0, this );
+                 connect( inAnimation,
+                          &QParallelAnimationGroup::finished,
+                          this,
+                          [ this, incomingPage, incoming ]() mutable
+                          {
+                              clearTransitionTarget( incomingPage, incoming );
+                              if ( incoming.quickItem )
+                              {
+                                  incoming.quickItem->setOpacity( 1.0 );
+                                  incoming.quickItem->setScale( 1.0 );
+                              }
+                              m_transitioning = false;
+                              updateButtonLabels();
+                          } );
+                 inAnimation->start( QAbstractAnimation::DeleteWhenStopped );
+             } );
+    outAnimation->start( QAbstractAnimation::DeleteWhenStopped );
 }
 
 void
@@ -317,7 +528,7 @@ questionBox( QWidget* parent,
 void
 ViewManager::next()
 {
-    if ( !currentStepValid() )
+    if ( !currentStepValid() || m_transitioning )
     {
         return;
     }
@@ -359,26 +570,49 @@ ViewManager::next()
             }
         }
 
+        const int previousStep = m_currentStep;
         m_currentStep++;
 
-        m_stack->setCurrentIndex( m_currentStep );  // Does nothing if out of range
-        step->onLeave();
+        const auto applyStepChange = [ this, step, &executing ]()
+        {
+            m_stack->setCurrentIndex( m_currentStep );  // Does nothing if out of range
+            step->onLeave();
 
-        if ( m_currentStep < m_steps.count() )
+            const auto* const stepSettings = Calamares::Settings::instance();
+            if ( m_currentStep < m_steps.count() )
+            {
+                m_steps.at( m_currentStep )->onActivate();
+                executing = qobject_cast< ExecutionViewStep* >( m_steps.at( m_currentStep ) ) != nullptr;
+                emit currentStepChanged();
+            }
+            else
+            {
+                executing = false;
+                UPDATE_BUTTON_PROPERTY( nextEnabled, false );
+                UPDATE_BUTTON_PROPERTY( backEnabled, false );
+            }
+            updateCancelEnabled( !stepSettings->disableCancel()
+                                 && !( executing && stepSettings->disableCancelDuringExec() ) );
+            updateBackAndNextVisibility( !( executing && stepSettings->hideBackAndNextDuringExec() ) );
+
+            if ( m_currentStep < m_steps.count() )
+            {
+                UPDATE_BUTTON_PROPERTY( nextEnabled, !executing && m_steps.at( m_currentStep )->isNextEnabled() );
+                UPDATE_BUTTON_PROPERTY( backEnabled, !executing && m_steps.at( m_currentStep )->isBackEnabled() );
+            }
+        };
+
+        if ( m_currentStep < m_stack->count() )
         {
-            m_steps.at( m_currentStep )->onActivate();
-            executing = qobject_cast< ExecutionViewStep* >( m_steps.at( m_currentStep ) ) != nullptr;
-            emit currentStepChanged();
+            animateStepChange( previousStep, m_currentStep, applyStepChange );
+            if ( !m_transitioning )
+            {
+                updateButtonLabels();
+            }
+            return;
         }
-        else
-        {
-            // Reached the end in a weird state (e.g. no finished step after an exec)
-            executing = false;
-            UPDATE_BUTTON_PROPERTY( nextEnabled, false );
-            UPDATE_BUTTON_PROPERTY( backEnabled, false );
-        }
-        updateCancelEnabled( !settings->disableCancel() && !( executing && settings->disableCancelDuringExec() ) );
-        updateBackAndNextVisibility( !( executing && settings->hideBackAndNextDuringExec() ) );
+
+        applyStepChange();
     }
     else
     {
@@ -454,7 +688,7 @@ ViewManager::updateButtonLabels()
 void
 ViewManager::back()
 {
-    if ( !currentStepValid() )
+    if ( !currentStepValid() || m_transitioning )
     {
         return;
     }
@@ -462,11 +696,29 @@ ViewManager::back()
     ViewStep* step = m_steps.at( m_currentStep );
     if ( step->isAtBeginning() && m_currentStep > 0 )
     {
+        const int previousStep = m_currentStep;
         m_currentStep--;
-        m_stack->setCurrentIndex( m_currentStep );
-        step->onLeave();
-        m_steps.at( m_currentStep )->onActivate();
-        emit currentStepChanged();
+
+        const auto applyStepChange = [ this, step ]()
+        {
+            m_stack->setCurrentIndex( m_currentStep );
+            step->onLeave();
+            m_steps.at( m_currentStep )->onActivate();
+            emit currentStepChanged();
+
+            UPDATE_BUTTON_PROPERTY( nextEnabled, m_steps.at( m_currentStep )->isNextEnabled() );
+            UPDATE_BUTTON_PROPERTY( backEnabled,
+                                    ( m_currentStep == 0 && m_steps.first()->isAtBeginning() )
+                                        ? false
+                                        : m_steps.at( m_currentStep )->isBackEnabled() );
+        };
+
+        animateStepChange( previousStep, m_currentStep, applyStepChange );
+        if ( !m_transitioning )
+        {
+            updateButtonLabels();
+        }
+        return;
     }
     else if ( !step->isAtBeginning() )
     {
