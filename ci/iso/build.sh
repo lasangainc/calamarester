@@ -54,7 +54,7 @@ bootstrap_rootfs() {
         debootstrap "${debootstrap_args[@]}" --foreign \
             "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
         iso_arch_setup_qemu "${CHROOT}"
-        iso_arch_chroot "${CHROOT}" /debootstrap/debootstrap --second-stage
+        iso_arch_chroot "${CHROOT}" /bin/sh /debootstrap/debootstrap --second-stage
     else
         debootstrap "${debootstrap_args[@]}" \
             "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
