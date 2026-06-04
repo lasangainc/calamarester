@@ -62,4 +62,5 @@ calamares-run.log
 /ci/iso/work/
 /ci/iso/out/
 /ci/iso/*.log
+/wget-log*
 
