@@ -124,11 +124,9 @@ iso_arch_chroot() {
             ;;
     esac
     if test "${ISO_NEEDS_QEMU}" = true; then
-        if test -f "/proc/sys/fs/binfmt_misc/qemu-${QEMU_CPU}"; then
-            chroot "${root}" "${prog}" "$@"
-        else
-            chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
-        fi
+        # Always invoke via qemu-user-static inside the chroot; binfmt_misc handles
+        # subprocesses (grep, apt, etc.) spawned by the guest program.
+        chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
     else
         chroot "${root}" "${prog}" "$@"
     fi
