@@ -48,6 +48,23 @@ hosts (partition → mount → unpackfs → users → umount). Host-specific job
 such as `bootloader`, `initcpio`, and `initramfs` are omitted because they
 require real firmware, kernels, and distribution tooling.
 
+## Loopback disk
+
+The test disk is a **block device**, not a mounted filesystem:
+
+- `./ci/e2e-setup.sh` attaches `e2e/target-disk.img` to `/dev/loopN` with `losetup`
+- It should **not** have a mount point before install — Calamares partitions and mounts it during the install jobs
+- Check status anytime with `./ci/e2e-status.sh`
+
+In debug mode (`calamares -d`), loopback devices are included in the partition
+device list so the test disk appears in the installer UI.
+
+**Requirements for the partition page to list disks:**
+
+- `fdisk` package installed (`sfdisk` is used by KPMCore to scan devices)
+- Install test run as root via `./ci/e2e-run-install.sh` (the GUI walkthrough
+  without root can skip the partition step in debug mode)
+
 ## Cleanup
 
 ```bash

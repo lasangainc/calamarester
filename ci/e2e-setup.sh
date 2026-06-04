@@ -22,10 +22,10 @@ echo "    Build:   $BUILDDIR"
 echo "    E2E dir: $E2EDIR"
 
 # --- Dependencies ---
-if ! command -v ninja >/dev/null 2>&1; then
-    echo "==> Installing build dependencies..."
+if ! command -v ninja >/dev/null 2>&1 || ! command -v sfdisk >/dev/null 2>&1; then
+    echo "==> Installing build and runtime dependencies..."
     sudo bash "$SRCDIR/ci/deps-ubuntu.sh"
-    sudo apt-get install -y ninja-build squashfs-tools g++ libstdc++-12-dev xvfb
+    sudo apt-get install -y ninja-build squashfs-tools g++ libstdc++-12-dev xvfb fdisk
 fi
 
 # --- Build Calamares ---
