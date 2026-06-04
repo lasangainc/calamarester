@@ -77,6 +77,8 @@ Branding and QML modules come from the in-chroot Calamares build (`esteros` bran
 
 ## Publish to GitHub Releases
 
+Current release: [v1.0.0-esteros-debian-20260604](https://github.com/lasangainc/calamarester/releases/tag/v1.0.0-esteros-debian-20260604) (amd64 + arm64 assets).
+
 ```bash
 gh release create "v1.0.0-esteros-debian-$(date +%Y%m%d)" \
   ci/iso/out/esteros-debian-bookworm-amd64.iso \
