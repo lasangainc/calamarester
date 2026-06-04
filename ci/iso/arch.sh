@@ -124,7 +124,11 @@ iso_arch_chroot() {
             ;;
     esac
     if test "${ISO_NEEDS_QEMU}" = true; then
-        chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
+        if test -f "/proc/sys/fs/binfmt_misc/qemu-${QEMU_CPU}"; then
+            chroot "${root}" "${prog}" "$@"
+        else
+            chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
+        fi
     else
         chroot "${root}" "${prog}" "$@"
     fi
