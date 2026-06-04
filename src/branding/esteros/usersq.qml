@@ -9,7 +9,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
 
-import esteros 1.0
 import "."
 
 Item {
@@ -112,7 +111,6 @@ Item {
                     text: qsTr("Only lowercase letters, numbers, underscore and hyphen are allowed.")
                     color: "#BE5F68"
                     wrapMode: Text.WordWrap
-                    font.family: EsterOSTheme.fontFamily
                     font.pixelSize: 11
                 }
 
@@ -128,7 +126,6 @@ Item {
                     text: qsTr("root is not allowed as username.")
                     color: "#BE5F68"
                     wrapMode: Text.WordWrap
-                    font.family: EsterOSTheme.fontFamily
                     font.pixelSize: 11
                 }
 
@@ -144,7 +141,6 @@ Item {
                     text: qsTr("localhost is not allowed as hostname.")
                     color: "#BE5F68"
                     wrapMode: Text.WordWrap
-                    font.family: EsterOSTheme.fontFamily
                     font.pixelSize: 11
                 }
 
@@ -155,20 +151,17 @@ Item {
                     text: config.userPasswordMessage
                     color: "#BE5F68"
                     wrapMode: Text.WordWrap
-                    font.family: EsterOSTheme.fontFamily
                     font.pixelSize: 11
                 }
 
                 CheckBox {
                     visible: config.writeRootPassword
-                    font.family: EsterOSTheme.fontFamily
                     text: qsTr("Reuse user password as root password")
                     checked: config.reuseUserPasswordForRoot
                     onCheckedChanged: config.setReuseUserPasswordForRoot(checked)
                 }
 
                 CheckBox {
-                    font.family: EsterOSTheme.fontFamily
                     text: qsTr("Log in automatically without asking for the password")
                     checked: config.doAutoLogin
                     onCheckedChanged: config.setAutoLogin(checked)

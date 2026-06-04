@@ -4,7 +4,6 @@
 */
 import io.calamares.ui 1.0
 import io.calamares.core 1.0
-import esteros 1.0
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
@@ -34,7 +33,6 @@ Rectangle {
             enabled: ViewManager.quitEnabled
             flat: true
             text: ViewManager.quitLabel
-            font.family: EsterOSTheme.fontFamily
             onClicked: ViewManager.quit()
 
             ToolTip.visible: hovered
@@ -63,7 +61,6 @@ Rectangle {
             contentItem: Text {
                 text: "\u2190"
                 color: backButton.enabled ? "#1F1F1F" : "#888888"
-                font.family: EsterOSTheme.fontFamily
                 font.pixelSize: 22
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
@@ -90,7 +87,6 @@ Rectangle {
             contentItem: Text {
                 text: "\u2192"
                 color: "#FFFFFF"
-                font.family: EsterOSTheme.fontFamily
                 font.pixelSize: 22
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
