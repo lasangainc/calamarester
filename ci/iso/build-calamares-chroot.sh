@@ -16,8 +16,8 @@ export ARCH DEBIAN_ARCH ISO_NEEDS_QEMU QEMU_CPU
 
 export DEBIAN_FRONTEND=noninteractive
 
-iso_arch_chroot "${CHROOT}" apt-get update
-iso_arch_chroot "${CHROOT}" apt-get install -y --no-install-recommends \
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get update
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get install -y --no-install-recommends \
     build-essential \
     cmake \
     extra-cmake-modules \
@@ -82,4 +82,4 @@ iso_arch_chroot "${CHROOT}" /usr/bin/apt-get purge -y --auto-remove \
     libqt5svg5-dev libqt5webkit5-dev libyaml-cpp-dev qtbase5-dev \
     qtdeclarative5-dev qtlocation5-dev qttools5-dev qttools5-dev-tools \
     python3-dev || true
-iso_arch_chroot "${CHROOT}" apt-get autoremove -y || true
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get autoremove -y || true

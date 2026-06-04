@@ -94,5 +94,5 @@ Categories=System;
 X-GNOME-Autostart-enabled=true
 EOF
 
-iso_arch_chroot "${CHROOT}" apt-get clean
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get clean
 rm -rf "${CHROOT}/var/lib/apt/lists/"*

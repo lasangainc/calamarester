@@ -14,6 +14,7 @@ apt-get install -y \
     grub-pc-bin \
     grub-efi-amd64-bin \
     qemu-user-static \
+    qemu-user-binfmt \
     binfmt-support \
     mtools \
     dosfstools \
@@ -28,3 +29,11 @@ apt-get install -y ninja-build g++ libstdc++-12-dev
 
 # Host grub arm64-efi modules (for grub-mkrescue arm64 ISOs on x86)
 bash "$(dirname "$0")/install-host-grub-arm64.sh"
+
+# Optional: register binfmt for arm64 (speeds up some tools; chroot uses qemu-static).
+mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc 2>/dev/null || true
+if test -w /proc/sys/fs/binfmt_misc/register && test -f /usr/lib/binfmt.d/qemu-aarch64.conf; then
+    grep -v '^#' /usr/lib/binfmt.d/qemu-aarch64.conf | while read -r line; do
+        echo "$line" > /proc/sys/fs/binfmt_misc/register 2>/dev/null || true
+    done
+fi

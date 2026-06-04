@@ -67,9 +67,10 @@ iso_arch_prepare_debootstrap() {
     mkdir -p "${chroot}/usr/share/debootstrap"
     cp -a /usr/share/debootstrap/functions "${chroot}/usr/share/debootstrap/"
     cp -a /usr/share/debootstrap/scripts "${chroot}/usr/share/debootstrap/"
-    if test -f "${chroot}/debootstrap/suite"; then
-        cp "${chroot}/debootstrap/suite" "${chroot}/usr/share/debootstrap/suite"
-    else
+    if test -d "${chroot}/debootstrap"; then
+        cp -a "${chroot}/debootstrap/." "${chroot}/usr/share/debootstrap/" 2>/dev/null || true
+    fi
+    if test ! -f "${chroot}/usr/share/debootstrap/suite"; then
         echo "${suite}" >"${chroot}/usr/share/debootstrap/suite"
     fi
 }
@@ -115,15 +116,15 @@ iso_arch_chroot() {
     local root=$1
     local prog=$2
     shift 2
+    case "${prog}" in
+        /*) ;;
+        *)
+            echo "iso_arch_chroot: program path must be absolute: ${prog}" >&2
+            return 1
+            ;;
+    esac
     if test "${ISO_NEEDS_QEMU}" = true; then
-        case "${prog}" in
-            /*) ;;
-            *)
-                echo "iso_arch_chroot: program path must be absolute: ${prog}" >&2
-                return 1
-                ;;
-        esac
-        /usr/bin/qemu-${QEMU_CPU}-static -cpu max -L "${root}" "${root}${prog}" "$@"
+        chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
     else
         chroot "${root}" "${prog}" "$@"
     fi
