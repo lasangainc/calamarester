@@ -97,12 +97,21 @@ iso_arch_enable_binfmt() {
 }
 
 # Run a command in the target rootfs (native chroot or QEMU user emulation).
+# The command must use an absolute guest path (e.g. /usr/bin/apt-get).
 iso_arch_chroot() {
     local root=$1
-    shift
+    local prog=$2
+    shift 2
     if test "${ISO_NEEDS_QEMU}" = true; then
-        QEMU_LD_PREFIX="${root}" /usr/bin/qemu-${QEMU_CPU}-static -cpu max "$@"
+        case "${prog}" in
+            /*) ;;
+            *)
+                echo "iso_arch_chroot: program path must be absolute: ${prog}" >&2
+                return 1
+                ;;
+        esac
+        /usr/bin/qemu-${QEMU_CPU}-static -cpu max -L "${root}" "${root}${prog}" "$@"
     else
-        chroot "${root}" "$@"
+        chroot "${root}" "${prog}" "$@"
     fi
 }

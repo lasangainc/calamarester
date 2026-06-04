@@ -61,7 +61,7 @@ rsync -a \
     --exclude=ci/iso/work \
     "${SRCDIR}/" "${CHROOT}/root/calamares-src/"
 
-iso_arch_chroot "${CHROOT}" env \
+iso_arch_chroot "${CHROOT}" /usr/bin/env \
     CC=gcc CXX=g++ \
     cmake -S /root/calamares-src -B /root/calamares-build -G Ninja \
         -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
@@ -69,11 +69,11 @@ iso_arch_chroot "${CHROOT}" env \
         -DBUILD_TESTING=OFF \
         -DBUILD_SCHEMA_TESTING=OFF
 
-iso_arch_chroot "${CHROOT}" ninja -C /root/calamares-build
-iso_arch_chroot "${CHROOT}" ninja -C /root/calamares-build install
+iso_arch_chroot "${CHROOT}" /usr/bin/ninja -C /root/calamares-build
+iso_arch_chroot "${CHROOT}" /usr/bin/ninja -C /root/calamares-build install
 
-iso_arch_chroot "${CHROOT}" rm -rf /root/calamares-src /root/calamares-build
-iso_arch_chroot "${CHROOT}" apt-get purge -y --auto-remove \
+iso_arch_chroot "${CHROOT}" /bin/rm -rf /root/calamares-src /root/calamares-build
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get purge -y --auto-remove \
     build-essential cmake extra-cmake-modules ninja-build pkg-config \
     libappstreamqt-dev libkf5config-dev libkf5coreaddons-dev \
     libkf5crash-dev libkf5i18n-dev libkf5iconthemes-dev libkf5kio-dev \

@@ -24,14 +24,14 @@ deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
 deb http://security.debian.org/debian-security bookworm-security main contrib non-free-firmware
 EOF
 
-iso_arch_chroot "${CHROOT}" apt-get update
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get update
 
 mapfile -t chroot_packages < <(iso_chroot_packages)
-iso_arch_chroot "${CHROOT}" apt-get install -y --no-install-recommends "${chroot_packages[@]}"
+iso_arch_chroot "${CHROOT}" /usr/bin/apt-get install -y --no-install-recommends "${chroot_packages[@]}"
 
 # Locale for Calamares and the installed system
-iso_arch_chroot "${CHROOT}" sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-iso_arch_chroot "${CHROOT}" locale-gen en_US.UTF-8
+iso_arch_chroot "${CHROOT}" /bin/sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+iso_arch_chroot "${CHROOT}" /usr/sbin/locale-gen en_US.UTF-8
 echo 'LANG=en_US.UTF-8' >"${CHROOT}/etc/locale.conf"
 echo 'LANG=en_US.UTF-8' >"${CHROOT}/etc/default/locale"
 
