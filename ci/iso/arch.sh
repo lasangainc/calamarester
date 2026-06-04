@@ -81,22 +81,28 @@ iso_arch_enable_binfmt() {
     if test -f "/proc/sys/fs/binfmt_misc/qemu-${QEMU_CPU}"; then
         return 0
     fi
-    if test ! -w /proc/sys/fs/binfmt_misc/register; then
-        echo "Cannot register binfmt (no /proc/sys/fs/binfmt_misc/register)" >&2
-        return 1
+    if test ! -w /proc/sys/fs/binfmt_misc/register 2>/dev/null; then
+        log_msg="binfmt_misc unavailable; using QEMU_LD_PREFIX for chroot commands"
+        echo "${log_msg}" >&2
+        return 0
     fi
 
-    # Register aarch64 ELF binaries to run through qemu-user-static (needed when
-    # systemd-binfmt is unavailable, e.g. in containers).
     case "${QEMU_CPU}" in
         aarch64)
             printf '%s\n' \
                 ":qemu-aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xaa\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:${qemu_bin}:F" \
-                >/proc/sys/fs/binfmt_misc/register
-            ;;
-        *)
-            echo "No binfmt registration rule for QEMU_CPU=${QEMU_CPU}" >&2
-            return 1
+                >/proc/sys/fs/binfmt_misc/register 2>/dev/null || true
             ;;
     esac
+}
+
+# Run a command in the target rootfs (native chroot or QEMU user emulation).
+iso_arch_chroot() {
+    local root=$1
+    shift
+    if test "${ISO_NEEDS_QEMU}" = true; then
+        QEMU_LD_PREFIX="${root}" /usr/bin/qemu-${QEMU_CPU}-static -cpu max "$@"
+    else
+        chroot "${root}" "$@"
+    fi
 }

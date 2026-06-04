@@ -11,6 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=chroot-packages.sh
 . "${SCRIPT_DIR}/chroot-packages.sh"
 iso_arch_init
+export ARCH DEBIAN_ARCH KERNEL_PACKAGE ISO_NEEDS_QEMU QEMU_CPU
 
 CHROOT="${1:?chroot path required}"
 ISO_CONFIG="${2:?iso config directory required}"
@@ -23,14 +24,14 @@ deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
 deb http://security.debian.org/debian-security bookworm-security main contrib non-free-firmware
 EOF
 
-chroot "${CHROOT}" apt-get update
+iso_arch_chroot "${CHROOT}" apt-get update
 
 mapfile -t chroot_packages < <(iso_chroot_packages)
-chroot "${CHROOT}" apt-get install -y --no-install-recommends "${chroot_packages[@]}"
+iso_arch_chroot "${CHROOT}" apt-get install -y --no-install-recommends "${chroot_packages[@]}"
 
 # Locale for Calamares and the installed system
-chroot "${CHROOT}" sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-chroot "${CHROOT}" locale-gen en_US.UTF-8
+iso_arch_chroot "${CHROOT}" sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+iso_arch_chroot "${CHROOT}" locale-gen en_US.UTF-8
 echo 'LANG=en_US.UTF-8' >"${CHROOT}/etc/locale.conf"
 echo 'LANG=en_US.UTF-8' >"${CHROOT}/etc/default/locale"
 
@@ -93,5 +94,5 @@ Categories=System;
 X-GNOME-Autostart-enabled=true
 EOF
 
-chroot "${CHROOT}" apt-get clean
+iso_arch_chroot "${CHROOT}" apt-get clean
 rm -rf "${CHROOT}/var/lib/apt/lists/"*
