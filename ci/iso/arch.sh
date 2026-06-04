@@ -50,7 +50,6 @@ iso_arch_init() {
 }
 
 iso_arch_grub_mkrescue() {
-    # Usage: iso_arch_grub_mkrescue <output.iso> <iso-tree-dir>
     local out_iso=$1
     local iso_tree=$2
 
@@ -58,6 +57,26 @@ iso_arch_grub_mkrescue() {
         grub-mkrescue -o "${out_iso}" --directory="${GRUB_EFI_DIR}" "${iso_tree}" -- -volid "ESTEROS_DEBIAN"
     else
         grub-mkrescue -o "${out_iso}" "${iso_tree}" -- -volid "ESTEROS_DEBIAN"
+    fi
+}
+
+iso_arch_enable_binfmt() {
+    test "${ISO_NEEDS_QEMU}" = true || return 0
+
+    if test -f "/proc/sys/fs/binfmt_misc/qemu-${QEMU_CPU}"; then
+        return 0
+    fi
+
+    mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc 2>/dev/null || true
+    if test ! -w /proc/sys/fs/binfmt_misc/register 2>/dev/null; then
+        echo "binfmt_misc unavailable; arm64 build needs qemu-user-binfmt" >&2
+        return 1
+    fi
+
+    if test -f /usr/lib/binfmt.d/qemu-aarch64.conf; then
+        grep -v '^#' /usr/lib/binfmt.d/qemu-aarch64.conf | while read -r line; do
+            echo "$line" > /proc/sys/fs/binfmt_misc/register 2>/dev/null || true
+        done
     fi
 }
 
@@ -85,29 +104,7 @@ iso_arch_setup_qemu() {
         return 1
     }
     install -D "${qemu_bin}" "${chroot}/usr/bin/qemu-${QEMU_CPU}-static"
-    iso_arch_enable_binfmt "${qemu_bin}"
-}
-
-iso_arch_enable_binfmt() {
-    local qemu_bin="${1:-/usr/bin/qemu-${QEMU_CPU}-static}"
-    test "${ISO_NEEDS_QEMU}" = true || return 0
-
-    if test -f "/proc/sys/fs/binfmt_misc/qemu-${QEMU_CPU}"; then
-        return 0
-    fi
-    if test ! -w /proc/sys/fs/binfmt_misc/register 2>/dev/null; then
-        log_msg="binfmt_misc unavailable; using QEMU_LD_PREFIX for chroot commands"
-        echo "${log_msg}" >&2
-        return 0
-    fi
-
-    case "${QEMU_CPU}" in
-        aarch64)
-            printf '%s\n' \
-                ":qemu-aarch64:M::\x7fELF\x02\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xaa\x00:\xff\xff\xff\xff\xff\xff\xff\x00\xff\xff\xff\xff\xff\xff\xff\xff\xfe\xff\xff:${qemu_bin}:F" \
-                >/proc/sys/fs/binfmt_misc/register 2>/dev/null || true
-            ;;
-    esac
+    iso_arch_enable_binfmt
 }
 
 # Run a command in the target rootfs (native chroot or QEMU user emulation).
@@ -124,9 +121,9 @@ iso_arch_chroot() {
             ;;
     esac
     if test "${ISO_NEEDS_QEMU}" = true; then
-        # Always invoke via qemu-user-static inside the chroot; binfmt_misc handles
-        # subprocesses (grep, apt, etc.) spawned by the guest program.
-        chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
+        # Do not pass QEMU_CPU in the environment — qemu-user-static treats it
+        # as a -cpu model and fails with "unable to find CPU model 'aarch64'".
+        env -u QEMU_CPU chroot "${root}" "/usr/bin/qemu-${QEMU_CPU}-static" "${prog}" "$@"
     else
         chroot "${root}" "${prog}" "$@"
     fi

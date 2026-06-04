@@ -61,9 +61,6 @@ bootstrap_rootfs() {
             "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
     fi
 
-    if test "${ISO_NEEDS_QEMU}" = true; then
-        iso_arch_setup_qemu "${CHROOT}"
-    fi
 }
 
 configure_rootfs() {
@@ -123,6 +120,10 @@ main() {
 
     if test "${ISO_NEEDS_QEMU}" = true; then
         log "Cross-arch build: host=${HOST_DEBIAN_ARCH:-?} target=${DEBIAN_ARCH} (QEMU user emulation)"
+        mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc 2>/dev/null || true
+        # Register binfmt for guest subprocesses; disable during explicit qemu-static
+        # wrapper calls to avoid nested emulation (see iso_arch_run_with_binfmt).
+        iso_arch_enable_binfmt
     fi
 
     bootstrap_rootfs
