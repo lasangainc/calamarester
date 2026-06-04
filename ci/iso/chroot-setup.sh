@@ -18,6 +18,8 @@ ISO_CONFIG="${2:?iso config directory required}"
 
 export DEBIAN_FRONTEND=noninteractive
 
+iso_arch_mount_virtual_fs "${CHROOT}"
+
 cat >"${CHROOT}/etc/apt/sources.list" <<'EOF'
 deb http://deb.debian.org/debian bookworm main contrib non-free-firmware
 deb http://deb.debian.org/debian bookworm-updates main contrib non-free-firmware
@@ -96,3 +98,5 @@ EOF
 
 iso_arch_chroot "${CHROOT}" /usr/bin/apt-get clean
 rm -rf "${CHROOT}/var/lib/apt/lists/"*
+
+iso_arch_umount_virtual_fs "${CHROOT}"

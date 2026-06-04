@@ -16,6 +16,8 @@ export ARCH DEBIAN_ARCH ISO_NEEDS_QEMU QEMU_CPU
 
 export DEBIAN_FRONTEND=noninteractive
 
+iso_arch_mount_virtual_fs "${CHROOT}"
+
 iso_arch_chroot "${CHROOT}" /usr/bin/apt-get update
 iso_arch_chroot "${CHROOT}" /usr/bin/apt-get install -y --no-install-recommends \
     build-essential \
@@ -83,3 +85,5 @@ iso_arch_chroot "${CHROOT}" /usr/bin/apt-get purge -y --auto-remove \
     qtdeclarative5-dev qtlocation5-dev qttools5-dev qttools5-dev-tools \
     python3-dev || true
 iso_arch_chroot "${CHROOT}" /usr/bin/apt-get autoremove -y || true
+
+iso_arch_umount_virtual_fs "${CHROOT}"

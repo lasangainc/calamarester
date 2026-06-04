@@ -94,6 +94,23 @@ iso_arch_prepare_debootstrap() {
     fi
 }
 
+iso_arch_mount_virtual_fs() {
+    local root=$1
+    mkdir -p "${root}/dev/pts" "${root}/proc" "${root}/sys"
+    mountpoint -q "${root}/dev" || mount --bind /dev "${root}/dev"
+    mountpoint -q "${root}/dev/pts" || mount --bind /dev/pts "${root}/dev/pts"
+    mountpoint -q "${root}/proc" || mount -t proc proc "${root}/proc"
+    mountpoint -q "${root}/sys" || mount -t sysfs sysfs "${root}/sys"
+}
+
+iso_arch_umount_virtual_fs() {
+    local root=$1
+    umount "${root}/dev/pts" 2>/dev/null || true
+    umount "${root}/dev" 2>/dev/null || true
+    umount "${root}/proc" 2>/dev/null || true
+    umount "${root}/sys" 2>/dev/null || true
+}
+
 iso_arch_setup_qemu() {
     local chroot=$1
     test "${ISO_NEEDS_QEMU}" = true || return 0

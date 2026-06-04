@@ -27,13 +27,21 @@ log() { printf '==> [%s] %s\n' "${ARCH}" "$*"; }
 test "$(id -u)" -eq 0 || { echo "run as root"; exit 1; }
 test -x "${CHROOT}/usr/bin/calamares" || { echo "missing ${CHROOT}/usr/bin/calamares"; exit 1; }
 
-log "Configuring root filesystem"
-bash "${SCRIPT_DIR}/chroot-setup.sh" "${CHROOT}" "${ISO_CONFIG}"
+if test ! -f "${CHROOT}/etc/calamares/settings.conf"; then
+    log "Configuring root filesystem"
+    bash "${SCRIPT_DIR}/chroot-setup.sh" "${CHROOT}" "${ISO_CONFIG}"
+else
+    log "Root filesystem already configured, skipping chroot-setup"
+fi
 
 log "Creating squashfs image"
+if test "${ISO_NEEDS_QEMU}" = true; then
+    iso_arch_umount_virtual_fs "${CHROOT}"
+fi
 rm -rf "${ISO_TREE}"
 mkdir -p "${ISO_TREE}/live" "${ISO_TREE}/boot/grub"
-mksquashfs "${CHROOT}" "${SQUASHFS}" -comp zstd -Xcompression-level 6 -noappend -e boot
+mksquashfs "${CHROOT}" "${SQUASHFS}" -comp zstd -Xcompression-level 6 -noappend \
+    -e boot proc sys dev run tmp
 
 kernel="$(ls "${CHROOT}/boot"/vmlinuz-* 2>/dev/null | sort -V | tail -n1)"
 initrd="$(ls "${CHROOT}/boot"/initrd.img-* 2>/dev/null | sort -V | tail -n1)"

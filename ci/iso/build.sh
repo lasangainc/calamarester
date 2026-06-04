@@ -72,9 +72,13 @@ configure_rootfs() {
 
 create_squashfs() {
     log "Creating squashfs image"
+    if test "${ISO_NEEDS_QEMU}" = true; then
+        iso_arch_umount_virtual_fs "${CHROOT}"
+    fi
     rm -rf "${ISO_TREE}"
     mkdir -p "${ISO_TREE}/live" "${ISO_TREE}/boot/grub"
-    mksquashfs "${CHROOT}" "${SQUASHFS}" -comp zstd -Xcompression-level 6 -noappend -e boot
+    mksquashfs "${CHROOT}" "${SQUASHFS}" -comp zstd -Xcompression-level 6 -noappend \
+        -e boot proc sys dev run tmp
 }
 
 install_kernel_initrd() {
