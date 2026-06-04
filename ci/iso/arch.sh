@@ -61,6 +61,19 @@ iso_arch_grub_mkrescue() {
     fi
 }
 
+iso_arch_prepare_debootstrap() {
+    local chroot=$1
+    local suite=$2
+    mkdir -p "${chroot}/usr/share/debootstrap"
+    cp -a /usr/share/debootstrap/functions "${chroot}/usr/share/debootstrap/"
+    cp -a /usr/share/debootstrap/scripts "${chroot}/usr/share/debootstrap/"
+    if test -f "${chroot}/debootstrap/suite"; then
+        cp "${chroot}/debootstrap/suite" "${chroot}/usr/share/debootstrap/suite"
+    else
+        echo "${suite}" >"${chroot}/usr/share/debootstrap/suite"
+    fi
+}
+
 iso_arch_setup_qemu() {
     local chroot=$1
     test "${ISO_NEEDS_QEMU}" = true || return 0
