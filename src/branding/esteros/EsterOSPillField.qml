@@ -2,6 +2,8 @@
    SPDX-FileCopyrightText: no
    SPDX-License-Identifier: CC0-1.0
 */
+import esteros 1.0
+
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
@@ -27,6 +29,7 @@ ColumnLayout {
     Label {
         id: fieldLabel
         Layout.fillWidth: true
+        font.family: EsterOSTheme.fontFamily
         font.pixelSize: 12
         color: "#1F1F1F"
     }
@@ -37,6 +40,7 @@ ColumnLayout {
         implicitHeight: 40
         leftPadding: 18
         rightPadding: 18
+        font.family: EsterOSTheme.fontFamily
         font.pixelSize: 13
         color: "#1F1F1F"
         onTextChanged: root.textEdited(text)

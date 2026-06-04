@@ -3,6 +3,7 @@
    SPDX-License-Identifier: CC0-1.0
 */
 import io.calamares.ui 1.0
+import esteros 1.0
 
 import QtQuick 2.15
 import QtQuick.Controls 2.15
@@ -46,6 +47,7 @@ Item {
             id: titleText
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
+            font.family: EsterOSTheme.fontFamily
             font.bold: true
             font.pixelSize: 20
             wrapMode: Text.WordWrap
@@ -56,6 +58,7 @@ Item {
             id: descText
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
+            font.family: EsterOSTheme.fontFamily
             font.pixelSize: 13
             wrapMode: Text.WordWrap
             color: root.mutedTextColor
