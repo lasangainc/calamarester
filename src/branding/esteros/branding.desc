@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: no
 # SPDX-License-Identifier: CC0-1.0
 #
-# esterOS branding — minimalist centered installer UI
+# OriginUI branding — minimalist centered installer UI
 ---
 componentName:  esteros
 
@@ -16,13 +16,13 @@ sidebar:            none
 navigation:         qml
 
 strings:
-    productName:         esterOS
-    shortProductName:    esterOS
+    productName:         OriginUI
+    shortProductName:    OriginUI
     version:             1.0
     shortVersion:        1.0
-    versionedName:       esterOS 1.0
-    shortVersionedName:  esterOS
-    bootloaderEntryName: esterOS
+    versionedName:       OriginUI 1.0
+    shortVersionedName:  OriginUI
+    bootloaderEntryName: OriginUI
     productUrl:          ""
     supportUrl:          ""
     knownIssuesUrl:      ""

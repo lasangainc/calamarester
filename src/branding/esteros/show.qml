@@ -9,6 +9,8 @@ import calamares.slideshow 1.0
 Presentation {
     id: presentation
 
+    readonly property int emblemSize: 48
+
     function onActivate() {
         presentation.currentSlide = 0;
     }
@@ -27,17 +29,20 @@ Presentation {
                 Image {
                     anchors.horizontalCenter: parent.horizontalCenter
                     source: "file:/" + Branding.imagePath(Branding.ProductLogo)
-                    sourceSize.width: 64
-                    sourceSize.height: 64
-                    width: 64
-                    height: 64
+                    sourceSize.width: presentation.emblemSize
+                    sourceSize.height: presentation.emblemSize
+                    width: presentation.emblemSize
+                    height: presentation.emblemSize
                     fillMode: Image.PreserveAspectFit
                     mipmap: true
+
+                    Behavior on width { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
+                    Behavior on height { NumberAnimation { duration: 400; easing.type: Easing.OutCubic } }
                 }
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Installing esterOS…")
+                    text: qsTr("Installing OriginUI…")
                     font.bold: true
                     font.pixelSize: 20
                 }

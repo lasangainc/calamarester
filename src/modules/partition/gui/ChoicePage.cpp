@@ -162,7 +162,10 @@ ChoicePage::applyEsterOSBranding()
 
     auto* emblem = new QLabel( header );
     emblem->setAlignment( Qt::AlignHCenter );
-    emblem->setPixmap( Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 80, 80 ) ) );
+    m_esterOSEmblem = emblem;
+    m_esterOSEmblem->setPixmap(
+        Calamares::Branding::instance()->image( Calamares::Branding::ProductLogo, QSize( 48, 48 ) ) );
+    m_esterOSEmblem->setFixedSize( 48, 48 );
 
     auto* title = new QLabel( tr( "Choose where to install", "@title" ), header );
     title->setAlignment( Qt::AlignHCenter );
@@ -172,7 +175,7 @@ ChoicePage::applyEsterOSBranding()
     title->setFont( titleFont );
 
     auto* description = new QLabel(
-        tr( "Pick a storage device and how esterOS should use it.", "@info" ), header );
+        tr( "Pick a storage device and how OriginUI should use it.", "@info" ), header );
     description->setAlignment( Qt::AlignHCenter );
     description->setWordWrap( true );
     QFont descFont = description->font();

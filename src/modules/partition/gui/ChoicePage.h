@@ -177,6 +177,7 @@ private:
     bool m_esterOSBranding = false;
 
     QLabel* m_esterOSEmptyLabel = nullptr;
+    QLabel* m_esterOSEmblem = nullptr;
 
     QMutex m_coreMutex;
 
