@@ -54,9 +54,10 @@ bootstrap_rootfs() {
         debootstrap "${debootstrap_args[@]}" --foreign \
             "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
         iso_arch_setup_qemu "${CHROOT}"
-        # Explicit QEMU for second stage (binfmt may not apply inside chroot yet).
-        chroot "${CHROOT}" "/usr/bin/qemu-${QEMU_CPU}-static" \
-            /debootstrap/debootstrap --second-stage
+        if command -v update-binfmts >/dev/null 2>&1; then
+            update-binfmts --enable "qemu-${QEMU_CPU}" 2>/dev/null || true
+        fi
+        chroot "${CHROOT}" /debootstrap/debootstrap --second-stage
     else
         debootstrap "${debootstrap_args[@]}" \
             "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
