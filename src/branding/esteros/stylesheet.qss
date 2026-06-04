@@ -7,7 +7,6 @@
 
 #mainApp {
     background-color: #525252;
-    font-family: "Inter", sans-serif;
 }
 
 #viewManager,

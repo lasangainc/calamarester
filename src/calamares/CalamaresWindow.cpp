@@ -26,7 +26,6 @@
 
 #include <QApplication>
 #include <QBoxLayout>
-#include <QFont>
 #include <QCloseEvent>
 #if QT_VERSION < QT_VERSION_CHECK( 6, 0, 0 )
 #include <QDesktopWidget>
@@ -511,14 +510,6 @@ CalamaresWindow::CalamaresWindow( QWidget* parent )
     Calamares::unmarginLayout( contentsLayout );
     baseWidget->setLayout( mainLayout );
     setStyleSheet( Calamares::Branding::instance()->stylesheet() );
-
-    if ( branding->componentName() == QLatin1String( "esteros" ) )
-    {
-        QFont interFont( QStringLiteral( "Inter" ) );
-        interFont.setPointSize( font().pointSize() );
-        interFont.setStyleHint( QFont::SansSerif );
-        QApplication::setFont( interFont );
-    }
 }
 
 void
