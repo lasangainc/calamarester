@@ -67,3 +67,16 @@ Optional: `ninja -C /workspace/build example-distro` then run with default `sett
 - GitHub Actions uses **Qt6 on Fedora**; Ubuntu 24.04 here uses **Qt5** via `deps-ubuntu.sh` (no `WITH_QT6=ON` unless you add Qt6/KF6 packages yourself).
 
 See `CMakeLists.txt` (Example Distro / `calamares -d` comments) and `settings.conf` for the default module sequence.
+
+### End-to-end installer testing
+
+Full install testing (partition → unpack example distro → bootloader) is documented in **`ci/e2e/README.md`**.
+
+```bash
+./ci/e2e/setup.sh              # build + example.sqfs
+./ci/e2e/smoke.sh              # UI smoke (non-destructive)
+sudo ./ci/e2e/run.sh           # interactive install on /dev/vdb (erasable spare disk)
+sudo ./ci/e2e/verify.sh        # post-install checks
+```
+
+On Cursor Cloud VMs, `/dev/vdb` is the default target; **never** point `CALAMARES_E2E_DISK` at the system disk (`/dev/vda`).
