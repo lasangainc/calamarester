@@ -13,7 +13,6 @@ apt-get install -y \
     xorriso \
     grub-pc-bin \
     grub-efi-amd64-bin \
-    grub-efi-arm64-bin \
     qemu-user-static \
     binfmt-support \
     mtools \
@@ -26,3 +25,6 @@ if test -f /workspace/ci/deps-ubuntu.sh; then
 fi
 
 apt-get install -y ninja-build g++ libstdc++-12-dev
+
+# Host grub arm64-efi modules (for grub-mkrescue arm64 ISOs on x86)
+bash "$(dirname "$0")/install-host-grub-arm64.sh"
