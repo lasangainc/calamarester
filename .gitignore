@@ -58,3 +58,7 @@ tags
 build.log
 calamares-run.log
 
+# E2E test artifacts (created by ci/e2e-setup.sh)
+/e2e/target-disk.img
+/e2e/.loop-device
+

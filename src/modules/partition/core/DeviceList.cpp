@@ -10,6 +10,7 @@
 
 #include "DeviceList.h"
 
+#include "Settings.h"
 #include "partition/PartitionIterator.h"
 #include "utils/Logger.h"
 #include "utils/System.h"
@@ -129,7 +130,12 @@ getDevices( DeviceType which )
         cWarning() << "No KPM backend found.";
         return {};
     }
-    DeviceList devices = backend->scanDevices( /* not includeReadOnly, not includeLoopback */ ScanFlag( 0 ) );
+    ScanFlags scanFlags;
+    if ( Calamares::Settings::instance() && Calamares::Settings::instance()->debugMode() )
+    {
+        scanFlags |= ScanFlag::includeLoopback;
+    }
+    DeviceList devices = backend->scanDevices( scanFlags );
 
     /* The list of devices is cleaned up for use:
      *  - some devices can **never** be used (e.g. floppies, nullptr)
