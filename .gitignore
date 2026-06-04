@@ -58,3 +58,8 @@ tags
 build.log
 calamares-run.log
 
+# ISO build artifacts
+/ci/iso/work/
+/ci/iso/out/
+/ci/iso/*.log
+

@@ -95,9 +95,7 @@ build_iso() {
         -o "${out_iso}" \
         "${ISO_TREE}" \
         -- \
-        -volid "ESTEROS_DEBIAN" \
-        -joliet \
-        -joliet-long
+        -volid "ESTEROS_DEBIAN"
     log "ISO written to ${out_iso}"
     sha256sum "${out_iso}" | tee "${out_iso}.sha256"
 }

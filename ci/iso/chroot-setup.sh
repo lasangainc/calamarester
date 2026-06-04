@@ -43,8 +43,10 @@ chroot "${CHROOT}" apt-get install -y --no-install-recommends \
     ntfs-3g \
     cryptsetup \
     lvm2 \
-    grub-pc \
-    grub-efi-amd64 \
+    grub-common \
+    grub2-common \
+    grub-pc-bin \
+    grub-efi-amd64-bin \
     grub-efi-amd64-signed \
     shim-signed \
     os-prober \
@@ -67,14 +69,18 @@ chroot "${CHROOT}" apt-get install -y --no-install-recommends \
     qml-module-qtquick-layouts \
     qml-module-qtquick-window2 \
     qml-module-qtquick-privatewidgets \
-    libkf5config5 \
+    libkf5configcore5 \
+    libkf5configgui5 \
     libkf5coreaddons5 \
     libkf5i18n5 \
     libkf5iconthemes5 \
     libkf5service5 \
     libkf5solid5 \
     libkf5parts5 \
-    libkf5kio5 \
+    libkf5kiocore5 \
+    libkf5kiogui5 \
+    libkf5kiowidgets5 \
+    libkf5kiofilewidgets5 \
     libkf5crash5 \
     libkf5plasma5 \
     libkpmcore12 \
