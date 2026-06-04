@@ -69,7 +69,7 @@ chroot "${CHROOT}" ninja -C /root/calamares-build install
 chroot "${CHROOT}" rm -rf /root/calamares-src /root/calamares-build
 chroot "${CHROOT}" apt-get purge -y --auto-remove \
     build-essential cmake extra-cmake-modules ninja-build pkg-config \
-    libappstreamqt5-dev libkf5config-dev libkf5coreaddons-dev \
+    libappstreamqt-dev libkf5config-dev libkf5coreaddons-dev \
     libkf5crash-dev libkf5i18n-dev libkf5iconthemes-dev libkf5kio-dev \
     libkf5parts-dev libkf5plasma-dev libkf5service-dev libkf5solid-dev \
     libkpmcore-dev libparted-dev libpolkit-qt5-1-dev libpwquality-dev \

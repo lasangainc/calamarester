@@ -2,24 +2,29 @@
 # SPDX-FileCopyrightText: no
 # SPDX-License-Identifier: CC0-1.0
 #
-# Build a bootable Debian amd64 ISO with the customized esterOS Calamares installer.
+# Build a bootable Debian ISO with the customized esterOS Calamares installer.
+# Set ARCH=amd64 (default) or ARCH=arm64.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# shellcheck source=arch.sh
+. "${SCRIPT_DIR}/arch.sh"
+iso_arch_init
+export ARCH DEBIAN_ARCH KERNEL_PACKAGE ISO_ARCH_SUFFIX ISO_NEEDS_QEMU QEMU_CPU
+
 SRCDIR="${SRCDIR:-$(cd "${SCRIPT_DIR}/../.." && pwd)}"
 BUILDDIR="${BUILDDIR:-${SRCDIR}/build}"
-ISO_WORK="${ISO_WORK:-${SRCDIR}/ci/iso/work}"
+ISO_WORK="${ISO_WORK:-${SRCDIR}/ci/iso/work/${ARCH}}"
 ISO_OUT="${ISO_OUT:-${SRCDIR}/ci/iso/out}"
 ISO_CONFIG="${SCRIPT_DIR}/config"
 DEBIAN_SUITE="${DEBIAN_SUITE:-bookworm}"
 DEBIAN_MIRROR="${DEBIAN_MIRROR:-http://deb.debian.org/debian}"
-ARCH="${ARCH:-amd64}"
-ISO_NAME="${ISO_NAME:-esteros-debian-${DEBIAN_SUITE}-amd64.iso}"
+ISO_NAME="${ISO_NAME:-esteros-debian-${DEBIAN_SUITE}-${ISO_ARCH_SUFFIX}.iso}"
 CHROOT="${ISO_WORK}/chroot"
 ISO_TREE="${ISO_WORK}/iso-tree"
 SQUASHFS="${ISO_TREE}/live/filesystem.squashfs"
 
-log() { printf '==> %s\n' "$*"; }
+log() { printf '==> [%s] %s\n' "${ARCH}" "$*"; }
 
 require_root() {
     if test "$(id -u)" -ne 0; then
@@ -30,24 +35,39 @@ require_root() {
 
 build_calamares_in_chroot() {
     log "Building Calamares inside Debian chroot"
+    export ARCH DEBIAN_ARCH ISO_NEEDS_QEMU QEMU_CPU
     bash "${SCRIPT_DIR}/build-calamares-chroot.sh" "${CHROOT}" "${SRCDIR}"
 }
 
 bootstrap_rootfs() {
-    log "Bootstrapping Debian ${DEBIAN_SUITE} (${ARCH})"
+    log "Bootstrapping Debian ${DEBIAN_SUITE} (${DEBIAN_ARCH})"
     rm -rf "${CHROOT}"
     mkdir -p "${CHROOT}"
-    debootstrap \
-        --arch="${ARCH}" \
-        --variant=minbase \
-        --include=systemd,systemd-sysv,apt,ca-certificates,locales,sudo \
-        "${DEBIAN_SUITE}" \
-        "${CHROOT}" \
-        "${DEBIAN_MIRROR}"
+
+    local debootstrap_args=(
+        --arch="${DEBIAN_ARCH}"
+        --variant=minbase
+        --include=systemd,systemd-sysv,apt,ca-certificates,locales,sudo
+    )
+
+    if test "${ISO_NEEDS_QEMU}" = true; then
+        debootstrap "${debootstrap_args[@]}" --foreign \
+            "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
+        iso_arch_setup_qemu "${CHROOT}"
+        chroot "${CHROOT}" /debootstrap/debootstrap --second-stage
+    else
+        debootstrap "${debootstrap_args[@]}" \
+            "${DEBIAN_SUITE}" "${CHROOT}" "${DEBIAN_MIRROR}"
+    fi
+
+    if test "${ISO_NEEDS_QEMU}" = true; then
+        iso_arch_setup_qemu "${CHROOT}"
+    fi
 }
 
 configure_rootfs() {
     log "Configuring root filesystem"
+    export ARCH DEBIAN_ARCH KERNEL_PACKAGE
     build_calamares_in_chroot
     bash "${SCRIPT_DIR}/chroot-setup.sh" "${CHROOT}" "${ISO_CONFIG}"
 }
@@ -91,11 +111,7 @@ build_iso() {
     mkdir -p "${ISO_OUT}"
     out_iso="${ISO_OUT}/${ISO_NAME}"
     rm -f "${out_iso}"
-    grub-mkrescue \
-        -o "${out_iso}" \
-        "${ISO_TREE}" \
-        -- \
-        -volid "ESTEROS_DEBIAN"
+    iso_arch_grub_mkrescue "${out_iso}" "${ISO_TREE}"
     log "ISO written to ${out_iso}"
     sha256sum "${out_iso}" | tee "${out_iso}.sha256"
 }
@@ -103,13 +119,18 @@ build_iso() {
 main() {
     require_root
     mkdir -p "${ISO_WORK}" "${ISO_OUT}"
+
+    if test "${ISO_NEEDS_QEMU}" = true; then
+        log "Cross-arch build: host=${HOST_DEBIAN_ARCH:-?} target=${DEBIAN_ARCH} (QEMU user emulation)"
+    fi
+
     bootstrap_rootfs
     configure_rootfs
     create_squashfs
     install_kernel_initrd
     write_grub_cfg
     build_iso
-    log "Done: ${ISO_OUT}/${ISO_NAME}"
+    log "Done: ${out_iso}"
 }
 
 main "$@"

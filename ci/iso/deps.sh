@@ -13,6 +13,9 @@ apt-get install -y \
     xorriso \
     grub-pc-bin \
     grub-efi-amd64-bin \
+    grub-efi-arm64-bin \
+    qemu-user-static \
+    binfmt-support \
     mtools \
     dosfstools \
     rsync
