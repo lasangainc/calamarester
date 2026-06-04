@@ -7,6 +7,7 @@ set -eu
 
 apt-get update
 apt-get install -y \
+    debian-archive-keyring \
     debootstrap \
     squashfs-tools \
     xorriso \

@@ -18,7 +18,7 @@ chroot "${CHROOT}" apt-get install -y --no-install-recommends \
     gettext \
     ninja-build \
     pkg-config \
-    libappstreamqt5-dev \
+    libappstreamqt-dev \
     libkf5config-dev \
     libkf5coreaddons-dev \
     libkf5crash-dev \
