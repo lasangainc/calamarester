@@ -14,6 +14,17 @@ import "."
 Item {
     anchors.fill: parent
 
+    function updatePasswordMessage() {
+        passMessage.visible = (passwordField.text.length > 0 || verifyPasswordField.text.length > 0)
+                && config.userPasswordValidity !== 0
+    }
+
+    function updateRootPasswordMessage() {
+        rootPassMessage.visible = !reusePasswordCheck.checked
+                && (rootPasswordField.text.length > 0 || verifyRootPasswordField.text.length > 0)
+                && config.rootPasswordValidity !== 0
+    }
+
     EsterOSFrame {
         anchors.fill: parent
         sectionTitle: qsTr("Create your account")
@@ -86,7 +97,11 @@ Item {
                     placeholderText: qsTr("Password")
                     text: config.userPassword
                     echoMode: TextInput.Password
-                    onTextEdited: config.setUserPassword(text)
+                    onTextEdited: {
+                        config.setUserPassword(text)
+                        config.setUserPasswordSecondary(verifyPasswordField.text)
+                        updatePasswordMessage()
+                    }
                 }
 
                 EsterOSPillField {
@@ -96,12 +111,8 @@ Item {
                     text: config.userPasswordSecondary
                     echoMode: TextInput.Password
                     onTextEdited: {
-                        if (passwordField.text === text) {
-                            config.setUserPasswordSecondary(text)
-                            passMessage.visible = false
-                        } else {
-                            passMessage.visible = true
-                        }
+                        config.setUserPasswordSecondary(text)
+                        updatePasswordMessage()
                     }
                 }
 
@@ -155,10 +166,51 @@ Item {
                 }
 
                 CheckBox {
+                    id: reusePasswordCheck
                     visible: config.writeRootPassword
                     text: qsTr("Reuse user password as root password")
                     checked: config.reuseUserPasswordForRoot
-                    onCheckedChanged: config.setReuseUserPasswordForRoot(checked)
+                    onCheckedChanged: {
+                        config.setReuseUserPasswordForRoot(checked)
+                        updateRootPasswordMessage()
+                    }
+                }
+
+                EsterOSPillField {
+                    id: rootPasswordField
+                    visible: config.writeRootPassword && !reusePasswordCheck.checked
+                    label: qsTr("Choose a root password")
+                    placeholderText: qsTr("Root password")
+                    text: config.rootPassword
+                    echoMode: TextInput.Password
+                    onTextEdited: {
+                        config.setRootPassword(text)
+                        config.setRootPasswordSecondary(verifyRootPasswordField.text)
+                        updateRootPasswordMessage()
+                    }
+                }
+
+                EsterOSPillField {
+                    id: verifyRootPasswordField
+                    visible: config.writeRootPassword && !reusePasswordCheck.checked
+                    label: qsTr("Repeat root password")
+                    placeholderText: qsTr("Repeat root password")
+                    text: config.rootPasswordSecondary
+                    echoMode: TextInput.Password
+                    onTextEdited: {
+                        config.setRootPasswordSecondary(text)
+                        updateRootPasswordMessage()
+                    }
+                }
+
+                Label {
+                    id: rootPassMessage
+                    visible: false
+                    Layout.fillWidth: true
+                    text: config.rootPasswordMessage
+                    color: "#BE5F68"
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 11
                 }
 
                 CheckBox {
