@@ -54,6 +54,7 @@
 #include <QFutureWatcher>
 #include <QLabel>
 #include <QListView>
+#include <QSignalBlocker>
 #include <QtConcurrent/QtConcurrent>
 
 using Calamares::Partition::findPartitionByPath;
@@ -188,6 +189,7 @@ ChoicePage::applyEsterOSBranding()
     m_drivesLabel->setText( tr( "Storage device", "@label" ) );
     m_drivesLabel->setAlignment( Qt::AlignHCenter );
     m_drivesCombo->setObjectName( QStringLiteral( "esterOSDeviceCombo" ) );
+    m_drivesCombo->hide();
     m_drivesLayout->setAlignment( Qt::AlignHCenter );
 
     m_itemsScrollArea->setObjectName( QStringLiteral( "esterOSOptionsArea" ) );
@@ -204,6 +206,19 @@ ChoicePage::applyEsterOSBranding()
     m_esterOSEmptyLabel->setAlignment( Qt::AlignHCenter );
     m_esterOSEmptyLabel->setStyleSheet( QStringLiteral( "color: #555555; padding: 24px;" ) );
     m_itemsLayout->addWidget( m_esterOSEmptyLabel );
+
+    m_esterOSDeviceList = new QListView( this );
+    m_esterOSDeviceList->setObjectName( QStringLiteral( "esterOSDeviceList" ) );
+    m_esterOSDeviceList->setSelectionMode( QAbstractItemView::SingleSelection );
+    m_esterOSDeviceList->setEditTriggers( QAbstractItemView::NoEditTriggers );
+    m_esterOSDeviceList->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    m_esterOSDeviceList->setUniformItemSizes( true );
+    m_esterOSDeviceList->setStyleSheet(
+        QStringLiteral(
+            "QListView#esterOSDeviceList { background: transparent; border: none; color: #222222; }"
+            "QListView#esterOSDeviceList::item { background: #ffffff; border-radius: 12px; padding: 12px; margin: 4px; }"
+            "QListView#esterOSDeviceList::item:selected { background: #2f7df6; color: #ffffff; }" ) );
+    m_itemsLayout->addWidget( m_esterOSDeviceList );
 
     hLine->hide();
     m_previewBeforeLabel->hide();
@@ -225,6 +240,10 @@ ChoicePage::updateEsterOSPresentation()
     if ( m_esterOSEmptyLabel )
     {
         m_esterOSEmptyLabel->setVisible( !hasDevice );
+    }
+    if ( m_esterOSDeviceList )
+    {
+        m_esterOSDeviceList->setVisible( hasDevice );
     }
 
     for ( Calamares::Widgets::PrettyRadioButton* button :
@@ -288,17 +307,49 @@ ChoicePage::init( PartitionCoreModule* core )
              [ = ]
              {
                  setModelToComboBox( m_drivesCombo, core->deviceModel() );
+                 setupEsterOSDeviceList();
                  m_drivesCombo->setCurrentIndex( m_lastSelectedDeviceIndex );
+                 syncEsterOSDeviceListSelection();
              } );
     setModelToComboBox( m_drivesCombo, core->deviceModel() );
+    setupEsterOSDeviceList();
 
     connect( m_drivesCombo, qOverload< int >( &QComboBox::currentIndexChanged ), this, &ChoicePage::applyDeviceChoice );
+    connect( m_drivesCombo,
+             qOverload< int >( &QComboBox::currentIndexChanged ),
+             this,
+             &ChoicePage::syncEsterOSDeviceListSelection );
     connect( m_encryptWidget, &EncryptWidget::stateChanged, this, &ChoicePage::onEncryptWidgetStateChanged );
     connect(
         m_reuseHomeCheckBox, Calamares::checkBoxStateChangedSignal, this, &ChoicePage::onHomeCheckBoxStateChanged );
 
     ChoicePage::applyDeviceChoice();
     updateEsterOSPresentation();
+}
+
+void
+ChoicePage::setupEsterOSDeviceList()
+{
+    if ( !m_esterOSBranding || !m_esterOSDeviceList || !m_core )
+    {
+        return;
+    }
+
+    m_esterOSDeviceList->setModel( m_core->deviceModel() );
+    syncEsterOSDeviceListSelection();
+}
+
+void
+ChoicePage::syncEsterOSDeviceListSelection()
+{
+    if ( !m_esterOSBranding || !m_esterOSDeviceList || !m_core )
+    {
+        return;
+    }
+
+    const QModelIndex index = m_core->deviceModel()->index( m_drivesCombo->currentIndex() );
+    QSignalBlocker blocker( m_esterOSDeviceList->selectionModel() );
+    m_esterOSDeviceList->setCurrentIndex( index );
 }
 
 /** @brief Creates a combobox with the given choices in it.
@@ -456,6 +507,20 @@ ChoicePage::setupChoices()
                      }
                  }
              } );
+
+    if ( m_esterOSDeviceList )
+    {
+        connect( m_esterOSDeviceList,
+                 &QListView::clicked,
+                 this,
+                 [ this ]( const QModelIndex& index )
+                 {
+                     if ( index.isValid() )
+                     {
+                         m_drivesCombo->setCurrentIndex( index.row() );
+                     }
+                 } );
+    }
 
     m_rightLayout->setStretchFactor( m_itemsLayout, 1 );
     m_rightLayout->setStretchFactor( m_previewBeforeFrame, 0 );

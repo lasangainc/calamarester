@@ -177,10 +177,13 @@ private:
     bool m_esterOSBranding = false;
 
     QLabel* m_esterOSEmptyLabel = nullptr;
+    QPointer< QListView > m_esterOSDeviceList;
 
     QMutex m_coreMutex;
 
     void applyEsterOSBranding();
+    void setupEsterOSDeviceList();
+    void syncEsterOSDeviceListSelection();
     void updateEsterOSPresentation();
 };
 
