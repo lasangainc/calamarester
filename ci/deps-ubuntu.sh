@@ -9,6 +9,7 @@ apt-get -y install \
         build-essential \
         cmake \
         extra-cmake-modules \
+        fdisk \
         gettext \
         libappstreamqt5-dev \
         libkf5config-dev \

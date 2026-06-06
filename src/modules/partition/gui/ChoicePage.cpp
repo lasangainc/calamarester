@@ -128,10 +128,13 @@ ChoicePage::ChoicePage( Config* config, QWidget* parent )
     m_reuseHomeCheckBox->hide();
     gs->insert( "reuseHome", false );
 
-    m_esterOSBranding = Calamares::Branding::instance()->componentName() == QStringLiteral( "esteros" );
-    if ( m_esterOSBranding )
+    const auto* branding = Calamares::Branding::instance();
+    m_compactPartitionUI = branding
+        && branding->sidebarFlavor() == Calamares::Branding::PanelFlavor::None
+        && branding->navigationFlavor() == Calamares::Branding::PanelFlavor::Qml;
+    if ( m_compactPartitionUI )
     {
-        applyEsterOSBranding();
+        applyCompactPartitionUI();
     }
 
     updateNextEnabled();
@@ -140,7 +143,7 @@ ChoicePage::ChoicePage( Config* config, QWidget* parent )
 ChoicePage::~ChoicePage() {}
 
 void
-ChoicePage::applyEsterOSBranding()
+ChoicePage::applyCompactPartitionUI()
 {
     setObjectName( QStringLiteral( "esterOSChoicePage" ) );
 
@@ -173,7 +176,9 @@ ChoicePage::applyEsterOSBranding()
     title->setFont( titleFont );
 
     auto* description = new QLabel(
-        tr( "Pick a storage device and how esterOS should use it.", "@info" ), header );
+        tr( "Pick a storage device and how %1 should use it.", "@info" )
+            .arg( Calamares::Branding::instance()->string( Calamares::Branding::ProductName ) ),
+        header );
     description->setAlignment( Qt::AlignHCenter );
     description->setWordWrap( true );
     QFont descFont = description->font();
@@ -200,25 +205,25 @@ ChoicePage::applyEsterOSBranding()
     m_itemsLayout->setSpacing( 10 );
     m_itemsLayout->setContentsMargins( 12, 12, 12, 12 );
 
-    m_esterOSEmptyLabel = new QLabel(
+    m_compactEmptyLabel = new QLabel(
         tr( "No storage devices were found. Connect a disk to continue.", "@info" ), this );
-    m_esterOSEmptyLabel->setWordWrap( true );
-    m_esterOSEmptyLabel->setAlignment( Qt::AlignHCenter );
-    m_esterOSEmptyLabel->setStyleSheet( QStringLiteral( "color: #555555; padding: 24px;" ) );
-    m_itemsLayout->addWidget( m_esterOSEmptyLabel );
+    m_compactEmptyLabel->setWordWrap( true );
+    m_compactEmptyLabel->setAlignment( Qt::AlignHCenter );
+    m_compactEmptyLabel->setStyleSheet( QStringLiteral( "color: #555555; padding: 24px;" ) );
+    m_itemsLayout->addWidget( m_compactEmptyLabel );
 
-    m_esterOSDeviceList = new QListView( this );
-    m_esterOSDeviceList->setObjectName( QStringLiteral( "esterOSDeviceList" ) );
-    m_esterOSDeviceList->setSelectionMode( QAbstractItemView::SingleSelection );
-    m_esterOSDeviceList->setEditTriggers( QAbstractItemView::NoEditTriggers );
-    m_esterOSDeviceList->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    m_esterOSDeviceList->setUniformItemSizes( true );
-    m_esterOSDeviceList->setStyleSheet(
+    m_compactDeviceList = new QListView( this );
+    m_compactDeviceList->setObjectName( QStringLiteral( "esterOSDeviceList" ) );
+    m_compactDeviceList->setSelectionMode( QAbstractItemView::SingleSelection );
+    m_compactDeviceList->setEditTriggers( QAbstractItemView::NoEditTriggers );
+    m_compactDeviceList->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    m_compactDeviceList->setUniformItemSizes( true );
+    m_compactDeviceList->setStyleSheet(
         QStringLiteral(
             "QListView#esterOSDeviceList { background: transparent; border: none; color: #222222; }"
             "QListView#esterOSDeviceList::item { background: #ffffff; border-radius: 12px; padding: 12px; margin: 4px; }"
             "QListView#esterOSDeviceList::item:selected { background: #2f7df6; color: #ffffff; }" ) );
-    m_itemsLayout->addWidget( m_esterOSDeviceList );
+    m_itemsLayout->addWidget( m_compactDeviceList );
 
     hLine->hide();
     m_previewBeforeLabel->hide();
@@ -229,21 +234,21 @@ ChoicePage::applyEsterOSBranding()
 }
 
 void
-ChoicePage::updateEsterOSPresentation()
+ChoicePage::updateCompactPartitionPresentation()
 {
-    if ( !m_esterOSBranding )
+    if ( !m_compactPartitionUI )
     {
         return;
     }
 
     const bool hasDevice = selectedDevice() != nullptr;
-    if ( m_esterOSEmptyLabel )
+    if ( m_compactEmptyLabel )
     {
-        m_esterOSEmptyLabel->setVisible( !hasDevice );
+        m_compactEmptyLabel->setVisible( !hasDevice );
     }
-    if ( m_esterOSDeviceList )
+    if ( m_compactDeviceList )
     {
-        m_esterOSDeviceList->setVisible( hasDevice );
+        m_compactDeviceList->setVisible( hasDevice );
     }
 
     for ( Calamares::Widgets::PrettyRadioButton* button :
@@ -307,49 +312,49 @@ ChoicePage::init( PartitionCoreModule* core )
              [ = ]
              {
                  setModelToComboBox( m_drivesCombo, core->deviceModel() );
-                 setupEsterOSDeviceList();
+                 setupCompactDeviceList();
                  m_drivesCombo->setCurrentIndex( m_lastSelectedDeviceIndex );
-                 syncEsterOSDeviceListSelection();
+                 syncCompactDeviceListSelection();
              } );
     setModelToComboBox( m_drivesCombo, core->deviceModel() );
-    setupEsterOSDeviceList();
+    setupCompactDeviceList();
 
     connect( m_drivesCombo, qOverload< int >( &QComboBox::currentIndexChanged ), this, &ChoicePage::applyDeviceChoice );
     connect( m_drivesCombo,
              qOverload< int >( &QComboBox::currentIndexChanged ),
              this,
-             &ChoicePage::syncEsterOSDeviceListSelection );
+             &ChoicePage::syncCompactDeviceListSelection );
     connect( m_encryptWidget, &EncryptWidget::stateChanged, this, &ChoicePage::onEncryptWidgetStateChanged );
     connect(
         m_reuseHomeCheckBox, Calamares::checkBoxStateChangedSignal, this, &ChoicePage::onHomeCheckBoxStateChanged );
 
     ChoicePage::applyDeviceChoice();
-    updateEsterOSPresentation();
+    updateCompactPartitionPresentation();
 }
 
 void
-ChoicePage::setupEsterOSDeviceList()
+ChoicePage::setupCompactDeviceList()
 {
-    if ( !m_esterOSBranding || !m_esterOSDeviceList || !m_core )
+    if ( !m_compactPartitionUI || !m_compactDeviceList || !m_core )
     {
         return;
     }
 
-    m_esterOSDeviceList->setModel( m_core->deviceModel() );
-    syncEsterOSDeviceListSelection();
+    m_compactDeviceList->setModel( m_core->deviceModel() );
+    syncCompactDeviceListSelection();
 }
 
 void
-ChoicePage::syncEsterOSDeviceListSelection()
+ChoicePage::syncCompactDeviceListSelection()
 {
-    if ( !m_esterOSBranding || !m_esterOSDeviceList || !m_core )
+    if ( !m_compactPartitionUI || !m_compactDeviceList || !m_core )
     {
         return;
     }
 
     const QModelIndex index = m_core->deviceModel()->index( m_drivesCombo->currentIndex() );
-    QSignalBlocker blocker( m_esterOSDeviceList->selectionModel() );
-    m_esterOSDeviceList->setCurrentIndex( index );
+    QSignalBlocker blocker( m_compactDeviceList->selectionModel() );
+    m_compactDeviceList->setCurrentIndex( index );
 }
 
 /** @brief Creates a combobox with the given choices in it.
@@ -461,7 +466,7 @@ ChoicePage::setupChoices()
     m_itemsLayout->addWidget( m_replaceButton );
     m_itemsLayout->addWidget( m_eraseButton );
 
-    if ( m_esterOSBranding )
+    if ( m_compactPartitionUI )
     {
         for ( Calamares::Widgets::PrettyRadioButton* button :
               { m_alongsideButton, m_replaceButton, m_eraseButton } )
@@ -476,7 +481,7 @@ ChoicePage::setupChoices()
         Calamares::defaultPixmap( Calamares::PartitionManual, Calamares::Original, iconSize ) );
     m_itemsLayout->addWidget( m_somethingElseButton );
     m_somethingElseButton->addToGroup( m_grp, InstallChoice::Manual );
-    if ( m_esterOSBranding )
+    if ( m_compactPartitionUI )
     {
         m_somethingElseButton->setObjectName( QStringLiteral( "esterOSOption" ) );
     }
@@ -508,18 +513,17 @@ ChoicePage::setupChoices()
                  }
              } );
 
-    if ( m_esterOSDeviceList )
+    if ( m_compactDeviceList )
     {
-        connect( m_esterOSDeviceList,
-                 &QListView::clicked,
-                 this,
-                 [ this ]( const QModelIndex& index )
-                 {
-                     if ( index.isValid() )
-                     {
-                         m_drivesCombo->setCurrentIndex( index.row() );
-                     }
-                 } );
+        const auto applyDeviceIndex = [ this ]( const QModelIndex& index )
+        {
+            if ( index.isValid() )
+            {
+                m_drivesCombo->setCurrentIndex( index.row() );
+            }
+        };
+        connect( m_compactDeviceList, &QListView::clicked, this, applyDeviceIndex );
+        connect( m_compactDeviceList, &QListView::activated, this, applyDeviceIndex );
     }
 
     m_rightLayout->setStretchFactor( m_itemsLayout, 1 );
@@ -560,7 +564,7 @@ ChoicePage::hideButtons()
     m_replaceButton->hide();
     m_alongsideButton->hide();
     m_somethingElseButton->hide();
-    updateEsterOSPresentation();
+    updateCompactPartitionPresentation();
 }
 
 void
@@ -639,7 +643,7 @@ ChoicePage::continueApplyDeviceChoice()
 
     Q_EMIT actionChosen();
     Q_EMIT deviceChosen();
-    updateEsterOSPresentation();
+    updateCompactPartitionPresentation();
 }
 
 void

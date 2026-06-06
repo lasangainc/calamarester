@@ -174,17 +174,17 @@ private:
 
     bool m_enableEncryptionWidget = false;
     bool m_preCheckActivated = false;
-    bool m_esterOSBranding = false;
+    bool m_compactPartitionUI = false;
 
-    QLabel* m_esterOSEmptyLabel = nullptr;
-    QPointer< QListView > m_esterOSDeviceList;
+    QLabel* m_compactEmptyLabel = nullptr;
+    QPointer< QListView > m_compactDeviceList;
 
     QMutex m_coreMutex;
 
-    void applyEsterOSBranding();
-    void setupEsterOSDeviceList();
-    void syncEsterOSDeviceListSelection();
-    void updateEsterOSPresentation();
+    void applyCompactPartitionUI();
+    void setupCompactDeviceList();
+    void syncCompactDeviceListSelection();
+    void updateCompactPartitionPresentation();
 };
 
 #endif  // CHOICEPAGE_H

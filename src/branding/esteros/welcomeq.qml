@@ -16,13 +16,13 @@ Item {
 
     EsterOSFrame {
         anchors.fill: parent
-        sectionTitle: qsTr("Get started using esterOS")
-        sectionDescription: qsTr("This wizard will help you install esterOS to your computer.")
+        sectionTitle: qsTr("Get started using %1").arg(Branding.string(Branding.ProductName))
+        sectionDescription: qsTr("This wizard will help you install %1 on your computer.").arg(Branding.string(Branding.ProductName))
     }
 
     Loader {
         anchors.fill: parent
-        active: !config.requirementsModel.satisfiedMandatory
+        active: !config.requirementsModel.satisfiedRequirements
         source: "qrc:/Requirements.qml"
     }
 }
