@@ -37,7 +37,7 @@ Presentation {
 
                 Text {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("Installing esterOS…")
+                    text: qsTr("Installing %1…").arg(Branding.string(Branding.ProductName))
                     font.bold: true
                     font.pixelSize: 20
                 }

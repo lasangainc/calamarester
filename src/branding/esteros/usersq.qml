@@ -14,15 +14,39 @@ import "."
 Item {
     anchors.fill: parent
 
-    function updatePasswordMessage() {
-        passMessage.visible = (passwordField.text.length > 0 || verifyPasswordField.text.length > 0)
-                && config.userPasswordValidity !== 0
+    function updatePasswordFeedback() {
+        if (passwordField.text.length === 0 && verifyPasswordField.text.length === 0) {
+            passMessage.visible = false
+            validityMessage.visible = false
+            return
+        }
+        if (passwordField.text !== verifyPasswordField.text) {
+            passMessage.visible = true
+            validityMessage.visible = false
+            return
+        }
+        passMessage.visible = false
+        validityMessage.visible = passwordField.text.length > 0
     }
 
-    function updateRootPasswordMessage() {
-        rootPassMessage.visible = !reusePasswordCheck.checked
-                && (rootPasswordField.text.length > 0 || verifyRootPasswordField.text.length > 0)
-                && config.rootPasswordValidity !== 0
+    function updateRootPasswordFeedback() {
+        if (!config.writeRootPassword || reusePasswordCheck.checked) {
+            rootPassMessage.visible = false
+            rootValidityMessage.visible = false
+            return
+        }
+        if (rootPasswordField.text.length === 0 && verifyRootPasswordField.text.length === 0) {
+            rootPassMessage.visible = false
+            rootValidityMessage.visible = false
+            return
+        }
+        if (rootPasswordField.text !== verifyRootPasswordField.text) {
+            rootPassMessage.visible = true
+            rootValidityMessage.visible = false
+            return
+        }
+        rootPassMessage.visible = false
+        rootValidityMessage.visible = rootPasswordField.text.length > 0
     }
 
     EsterOSFrame {
@@ -59,6 +83,7 @@ Item {
                         if (loginField.fieldItem.acceptableInput) {
                             if (text === "root") {
                                 forbiddenMessage.visible = true
+                                userMessage.visible = false
                             } else {
                                 config.setLoginName(text)
                                 userMessage.visible = false
@@ -66,6 +91,7 @@ Item {
                             }
                         } else {
                             userMessage.visible = true
+                            forbiddenMessage.visible = false
                         }
                     }
                 }
@@ -80,6 +106,7 @@ Item {
                         if (hostField.fieldItem.acceptableInput) {
                             if (text === "localhost") {
                                 forbiddenHost.visible = true
+                                hostMessage.visible = false
                             } else {
                                 config.setHostName(text)
                                 hostMessage.visible = false
@@ -87,6 +114,7 @@ Item {
                             }
                         } else {
                             hostMessage.visible = true
+                            forbiddenHost.visible = false
                         }
                     }
                 }
@@ -100,7 +128,7 @@ Item {
                     onTextEdited: {
                         config.setUserPassword(text)
                         config.setUserPasswordSecondary(verifyPasswordField.text)
-                        updatePasswordMessage()
+                        updatePasswordFeedback()
                     }
                 }
 
@@ -112,7 +140,7 @@ Item {
                     echoMode: TextInput.Password
                     onTextEdited: {
                         config.setUserPasswordSecondary(text)
-                        updatePasswordMessage()
+                        updatePasswordFeedback()
                     }
                 }
 
@@ -143,6 +171,11 @@ Item {
                 Label {
                     id: hostMessage
                     visible: false
+                    Layout.fillWidth: true
+                    text: qsTr("Only letters, numbers, underscore and hyphen are allowed, minimal of two characters.")
+                    color: "#BE5F68"
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 11
                 }
 
                 Label {
@@ -165,6 +198,16 @@ Item {
                     font.pixelSize: 11
                 }
 
+                Label {
+                    id: validityMessage
+                    visible: false
+                    Layout.fillWidth: true
+                    text: config.userPasswordMessage
+                    color: config.userPasswordValidity ? "#BE5F68" : "#4A7C59"
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 11
+                }
+
                 CheckBox {
                     id: reusePasswordCheck
                     visible: config.writeRootPassword
@@ -172,7 +215,7 @@ Item {
                     checked: config.reuseUserPasswordForRoot
                     onCheckedChanged: {
                         config.setReuseUserPasswordForRoot(checked)
-                        updateRootPasswordMessage()
+                        updateRootPasswordFeedback()
                     }
                 }
 
@@ -186,7 +229,7 @@ Item {
                     onTextEdited: {
                         config.setRootPassword(text)
                         config.setRootPasswordSecondary(verifyRootPasswordField.text)
-                        updateRootPasswordMessage()
+                        updateRootPasswordFeedback()
                     }
                 }
 
@@ -199,7 +242,7 @@ Item {
                     echoMode: TextInput.Password
                     onTextEdited: {
                         config.setRootPasswordSecondary(text)
-                        updateRootPasswordMessage()
+                        updateRootPasswordFeedback()
                     }
                 }
 
@@ -213,6 +256,16 @@ Item {
                     font.pixelSize: 11
                 }
 
+                Label {
+                    id: rootValidityMessage
+                    visible: false
+                    Layout.fillWidth: true
+                    text: config.rootPasswordMessage
+                    color: config.rootPasswordValidity ? "#BE5F68" : "#4A7C59"
+                    wrapMode: Text.WordWrap
+                    font.pixelSize: 11
+                }
+
                 CheckBox {
                     text: qsTr("Log in automatically without asking for the password")
                     checked: config.doAutoLogin
@@ -220,5 +273,11 @@ Item {
                 }
             }
         }
+    }
+
+    Connections {
+        target: config
+        function onUserPasswordStatusChanged() { updatePasswordFeedback() }
+        function onRootPasswordStatusChanged() { updateRootPasswordFeedback() }
     }
 }

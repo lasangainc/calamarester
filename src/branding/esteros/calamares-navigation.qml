@@ -12,7 +12,7 @@ import QtQuick.Layouts 1.3
 Rectangle {
     id: navigationBar
     color: "#EBEBEB"
-    height: 72
+    height: 64
     radius: 32
 
     readonly property color accentColor: "#2563EB"
@@ -24,7 +24,7 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 32
         anchors.rightMargin: 32
-        anchors.bottomMargin: 20
+        anchors.bottomMargin: 12
         spacing: 12
 
         Button {

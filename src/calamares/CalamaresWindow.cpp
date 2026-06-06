@@ -268,8 +268,8 @@ setDimension( QQuickWidget* w, Qt::Orientation o, int desiredWidth )
         // which seems to match what the widget navigation would use for height
         // (with *my* specific screen, style, etc. so YMMV).
         //
-        // Bound between (16, 64) with a default of 48.
-        qreal minimumHeight = qBound( qreal( 16 ), w->rootObject() ? w->rootObject()->height() : 48, qreal( 64 ) );
+        // Bound between (16, 96) with a default of 48.
+        qreal minimumHeight = qBound( qreal( 16 ), w->rootObject() ? w->rootObject()->height() : 48, qreal( 96 ) );
         w->setMinimumHeight( int( minimumHeight ) );
         w->setFixedHeight( int( minimumHeight ) );
     }

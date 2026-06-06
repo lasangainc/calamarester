@@ -24,6 +24,15 @@ Item {
             Layout.alignment: Qt.AlignHCenter
             spacing: 12
 
+            Text {
+                Layout.fillWidth: true
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: 11
+                color: "#555555"
+                text: qsTr("A full log of the install is available as installation.log in the home directory of the Live user. This log is copied to /var/log/installation.log of the target system.")
+            }
+
             Button {
                 Layout.fillWidth: true
                 implicitHeight: 44
